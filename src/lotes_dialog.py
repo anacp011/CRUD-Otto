@@ -18,11 +18,11 @@ class LoteDialog:
         frame.pack(pady=50)
 
         tk.Label(frame, text="NROLotes:").grid(row=0, column=0, sticky=tk.NS, pady=(10,0))
-        self.NumLotes = tk.Entry(frame, width=10)
+        self.NumLotes = tk.Entry(frame, width=15)
         self.NumLotes.grid(row=0, column=1, sticky=tk.W, pady=(10,0))
         
         tk.Label(frame, text="Cantidad:").grid(row=1, column=0, sticky=tk.NS, pady=(20,0))
-        self.cantidad = tk.Entry(frame, width=10)
+        self.cantidad = tk.Entry(frame, width=15)
         self.cantidad.grid(row=1, column=1, sticky=tk.W, pady=(20,0))
         
         tk.Label(frame, text="Fecha de inicio:").grid(row=2, column=0, sticky=tk.NS, pady=(30,0))

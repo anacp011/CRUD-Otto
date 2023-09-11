@@ -116,7 +116,7 @@ class ProveedorApp:
                 except pymysql.Error as e:
                     error_message = str(e)
                     if "foreign key constraint" in error_message.lower():
-                        messagebox.showerror("Error", "No se puede eliminar el proveedor, tiene una registro hecho.")
+                        messagebox.showerror("Error", "No se puede eliminar el proveedor, tiene un registro hecho.")
                     else:
                         messagebox.showerror("Error", f"No se pudo eliminar el proveedor: {error_message}")
         else:

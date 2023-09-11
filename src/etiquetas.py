@@ -42,9 +42,9 @@ class EtiquetaApp:
         self.entry.pack(side=tk.LEFT, padx=6, ipady=2)
         
         ## Botón
-        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar)
-        buscar_button.pack(side=tk.LEFT, padx=6)
-        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer)
+        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6)
+        buscar_button.pack(side=tk.LEFT, padx=(15,10))
+        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
         btn.pack(side=tk.LEFT, padx=6)
         
         ## Tablas

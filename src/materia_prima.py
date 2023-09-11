@@ -53,7 +53,7 @@ class MateriaPrimaApp:
         self.combo = ttk.Combobox(frame1, values=['', 'Número MatPrim', 'Nombre', 'Cantidad', 'Número Provee'], state='readonly', width=15)
         self.combo.pack(side=tk.LEFT, padx=20)
         self.entry = tk.Entry(frame1, width=15)
-        self.entry.pack(side=tk.LEFT, padx=20, ipady=1.5)
+        self.entry.pack(side=tk.LEFT, padx=6, ipady=1.5)
         
         ## Botón
         buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6)
@@ -162,7 +162,7 @@ class MateriaPrimaApp:
         if selected_item:
             values = self.trv.item(selected_item)["values"]
             
-            confirmation = messagebox.askyesno("Eliminar Materia Prima", "¿Está seguro que desea eliminar esta Materia Prima?")
+            confirmation = messagebox.askyesno("Eliminar Materia Prima", "¿Está seguro que desea eliminar esta materia prima?")
             if confirmation:
                 try:
                     conexion = ConexionDB(self) 
@@ -170,7 +170,7 @@ class MateriaPrimaApp:
                     conexion.close() 
                     self.actualizar()
                 except pymysql.Error as e:
-                    messagebox.showerror("Error", f"No se pudo eliminar el Materia Prima: {str(e)}")
+                    messagebox.showerror("Error", f"No se pudo eliminar la Materia Prima: {str(e)}")
         else:
             messagebox.showerror("Eliminar Materia Prima", "No ha seleccionado ningun Materia Prima")
     

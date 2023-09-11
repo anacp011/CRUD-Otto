@@ -16,15 +16,15 @@ class ProveedorDialog:
         self.dialog.columnconfigure(1, weight=2)
         
         tk.Label(self.dialog, text="ID de PR").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
-        self.NumProvee = tk.Entry(self.dialog)
+        self.NumProvee = tk.Entry(self.dialog, width=15)
         self.NumProvee.grid(row=0, column=1, sticky=tk.W, pady=(60,0))
         
         tk.Label(self.dialog, text="Nombre:").grid(row=1, column=0, sticky=tk.NS, pady=(20,0))
-        self.nombre = tk.Entry(self.dialog)
+        self.nombre = tk.Entry(self.dialog, width=15)
         self.nombre.grid(row=1, column=1, sticky=tk.W, pady=(20,0))
         
         tk.Label(self.dialog, text="Contacto:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
-        self.contacto = tk.Entry(self.dialog)
+        self.contacto = tk.Entry(self.dialog, width=22)
         self.contacto.grid(row=2, column=1, sticky=tk.W, pady=(20,0))
         
         if item:

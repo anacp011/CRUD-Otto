@@ -135,7 +135,7 @@ class EnvaseApp:
         if selected_item:
             values = self.trv.item(selected_item)["values"]
             
-            confirmation = messagebox.askyesno("Eliminar Envase", "¿Está seguro que desea eliminar esta Envase?")
+            confirmation = messagebox.askyesno("Eliminar Envase", "¿Está seguro que desea eliminar este envase?")
             if confirmation:
                 try:
                     conexion = ConexionDB(self) 
