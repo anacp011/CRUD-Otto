@@ -15,7 +15,7 @@ class EtiquetaDialog:
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
     
-        tk.Label(self.dialog, text="Número de ETQ:").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
+        tk.Label(self.dialog, text="Nro Etiqueta:").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
         self.NumEtiquetas = tk.Entry(self.dialog, width=15)
         self.NumEtiquetas.grid(row=0, column=1, sticky=tk.W, pady=(60,0))
         
@@ -23,7 +23,7 @@ class EtiquetaDialog:
         self.nombre = tk.Entry(self.dialog, width=15)
         self.nombre.grid(row=1, column=1, sticky=tk.W, pady=(20,0))
         
-        tk.Label(self.dialog, text="Proveedor ID:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
+        tk.Label(self.dialog, text="Nro Proveedor:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
         
         self.proveedorNum = ttk.Combobox(self.dialog, width=12)
         self.proveedorNum.grid(row=2, column=1, sticky=tk.W, pady=(20,0))

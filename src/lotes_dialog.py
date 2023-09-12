@@ -17,7 +17,7 @@ class LoteDialog:
         frame = tk.Frame(self.dialog)
         frame.pack(pady=50)
 
-        tk.Label(frame, text="NROLotes:").grid(row=0, column=0, sticky=tk.NS, pady=(10,0))
+        tk.Label(frame, text="Nro Lotes:").grid(row=0, column=0, sticky=tk.NS, pady=(10,0))
         self.NumLotes = tk.Entry(frame, width=15)
         self.NumLotes.grid(row=0, column=1, sticky=tk.W, pady=(10,0))
         
@@ -128,7 +128,7 @@ class LoteDialog:
                 fecha_mysql_fin,
                 self.verify_id_LOT(),
             ))
-            messagebox.showinfo("DATOS Completados", "Se actualizaron correctamente")
+            messagebox.showinfo("Datos Completados", "Se actualizaron correctamente")
     
             conexion.commit()
             conexion.close()

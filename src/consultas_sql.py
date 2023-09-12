@@ -50,6 +50,8 @@ class ConexionDB:
         self.cursor.execute(query)
         rows = self.cursor.fetchall()
         self.parent.vista(rows)
+        if not rows:
+            messagebox.showerror("Error", f"No se pudo realizar la búsqueda")
         
     def exist_id_PR (self, Nro_proveedor):
         conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
@@ -120,3 +122,5 @@ class ConexionDB:
         self.cursor.execute(query)
         rows = self.cursor.fetchall()
         self.parent.vista(rows)
+        if not rows:
+            messagebox.showerror("Error", f"No se pudo realizar la búsqueda")

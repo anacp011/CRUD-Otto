@@ -31,14 +31,15 @@ class EnvaseApp:
         self.proveedor_id = tk.StringVar()
         
         self.opciones_columnas = {
-            'Número Envases': 'env.nroEnvases',
-            'Nombre': 'env.nombre',
-            'Número Provee': 'pr.nroProvee'
+            '  Nro Envases': 'env.nroEnvases',
+            '  Nombre': 'env.nombre',
+            '  Nro Proveedor': 'pr.nroProvee'
         }
         
         ## Filtro
-        self.combo = ttk.Combobox(frame1, values=['', 'Número Envases', 'Nombre', 'Número Provee'], state='readonly', width=15)
+        self.combo = ttk.Combobox(frame1, values=['', '  Nro Envases', '  Nombre', '  Nro Proveedor'], state='readonly', width=20)
         self.combo.pack(side=tk.LEFT, padx=20)
+        self.combo.set("Seleccione una opción")
         self.entry = tk.Entry(frame1, width=15)
         self.entry.pack(side=tk.LEFT, padx=6, ipady=2)
         
@@ -54,9 +55,9 @@ class EnvaseApp:
         
         self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3), show="headings", height="8", selectmode="extended")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading('#1', text="Num Envase")
-        self.trv.heading('#2', text="Nombre De la Envase")
-        self.trv.heading('#3', text="Proveedor Num")
+        self.trv.heading('#1', text="Nro Envase")
+        self.trv.heading('#2', text="Nombre")
+        self.trv.heading('#3', text="Nro Proveedor")
         self.trv.column('#1', anchor=tk.CENTER)
         self.trv.column('#2', anchor=tk.CENTER)
         self.trv.column('#3', anchor=tk.CENTER)
@@ -126,7 +127,7 @@ class EnvaseApp:
                 self.conexion.close()
 
     def restablecer(self):
-        self.combo.set('')  # Restablece el Combobox a una cadena vacía
+        self.combo.set("Seleccione una opción")  # Restablece el Combobox a una cadena vacía
         self.entry.delete(0, tk.END)  # Borra el contenido del Entry
         self.actualizar()
     

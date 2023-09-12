@@ -37,7 +37,7 @@ class LoteApp:
         # Botón
         btn = tk.Button(frame1, text="Buscar", command=self.consulta, width=6)
         btn.pack(side=tk.LEFT, padx=(15,10))
-        btn = tk.Button(frame1, text="Restablecer", command=self.actualizar, width=10)
+        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
         btn.pack(side=tk.LEFT, padx=6)
         
         ## Tablas
@@ -46,7 +46,7 @@ class LoteApp:
         
         self.trv = ttk.Treeview(tree_frame, columns=(1,2,3,4), show="headings", height="8", selectmode = "extended")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading('#1', text='nroLotes')
+        self.trv.heading('#1', text='Nro Lotes')
         self.trv.heading('#2', text='cantidad')
         self.trv.heading('#3', text='fecha_inicio')
         self.trv.heading('#4', text='fecha_fin')

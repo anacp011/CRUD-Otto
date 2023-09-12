@@ -15,7 +15,7 @@ class EnvaseDialog:
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
     
-        tk.Label(self.dialog, text="Número de ENV:").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
+        tk.Label(self.dialog, text="Nro Envase:").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
         self.NumEnvases = tk.Entry(self.dialog, width=15)
         self.NumEnvases.grid(row=0, column=1, sticky=tk.W, pady=(60,0))
         
@@ -23,7 +23,7 @@ class EnvaseDialog:
         self.nombre = tk.Entry(self.dialog, width=15)
         self.nombre.grid(row=1, column=1, sticky=tk.W, pady=(20,0))
         
-        tk.Label(self.dialog, text="Proveedor ID:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
+        tk.Label(self.dialog, text="Nro Proveedor:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
         
         self.proveedorNum = ttk.Combobox(self.dialog, width=12)
         self.proveedorNum.grid(row=2, column=1, sticky=tk.W, pady=(20,0))

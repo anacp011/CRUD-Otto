@@ -43,15 +43,16 @@ class MateriaPrimaApp:
         self.proveedor_id = tk.StringVar()
         
         self.opciones_columnas = {
-            'Número MatPrim': 'mp.nroMatPrim',
-            'Nombre': 'mp.nombre',
-            'Cantidad': 'mp.cantidad',
-            'Número Provee': 'pr.nroProvee'
+            '  Nro MateriaPrima': 'mp.nroMatPrim',
+            '  Nombre': 'mp.nombre',
+            '  Cantidad': 'mp.cantidad',
+            '  Nro Proveedor': 'pr.nroProvee'
         }
         
         ## Filtro
-        self.combo = ttk.Combobox(frame1, values=['', 'Número MatPrim', 'Nombre', 'Cantidad', 'Número Provee'], state='readonly', width=15)
+        self.combo = ttk.Combobox(frame1, values=['', '  Nro MateriaPrima', '  Nombre', '  Cantidad', '  Nro Proveedor'], state='readonly', width=20)
         self.combo.pack(side=tk.LEFT, padx=20)
+        self.combo.set("Seleccione una opción")
         self.entry = tk.Entry(frame1, width=15)
         self.entry.pack(side=tk.LEFT, padx=6, ipady=1.5)
         
@@ -67,10 +68,10 @@ class MateriaPrimaApp:
         
         self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3, 4), show="headings", height="8", selectmode="extended")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading('#1', text="ID Materia Prima")
-        self.trv.heading('#2', text="Nombre De la Materia Prima")
+        self.trv.heading('#1', text="Nro Materia Prima")
+        self.trv.heading('#2', text="Nombre")
         self.trv.heading('#3', text="Cantidad")
-        self.trv.heading('#4', text="ID Proveedor")
+        self.trv.heading('#4', text="Nro Proveedor")
         
         self.trv.column('#1', anchor=tk.CENTER)
         self.trv.column('#2', anchor=tk.CENTER)
@@ -153,7 +154,7 @@ class MateriaPrimaApp:
                 self.conexion.close()
 
     def restablecer(self):
-        self.combo.set('')  # Restablece el Combobox a una cadena vacía
+        self.combo.set("Seleccione una opción")  # Restablece el Combobox a una cadena vacía
         self.entry.delete(0, tk.END)  # Borra el contenido del Entry
         self.actualizar()
     

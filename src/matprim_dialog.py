@@ -15,7 +15,7 @@ class MatPrimDialog:
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
     
-        tk.Label(self.dialog, text="ID de MP:").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
+        tk.Label(self.dialog, text="Nro Materia Prima:").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
         self.NumMatPrim = tk.Entry(self.dialog, width=15)
         self.NumMatPrim.grid(row=0, column=1, sticky=tk.W, pady=(60,0))
         
@@ -27,7 +27,7 @@ class MatPrimDialog:
         self.cantidad = tk.Entry(self.dialog, width=15)
         self.cantidad.grid(row=2, column=1, sticky=tk.W, pady=(20,0))
         
-        tk.Label(self.dialog, text="ID Proveedor").grid(row=3, column=0, sticky=tk.NS, pady=(20,0))
+        tk.Label(self.dialog, text="Nro Proveedor").grid(row=3, column=0, sticky=tk.NS, pady=(20,0))
         self.proveedorNum = ttk.Combobox(self.dialog, width=12)
         self.proveedorNum.grid(row=3, column=1, sticky=tk.W, pady=(20,0))
         self.proveedorNum['values'] = self.combo_input() 

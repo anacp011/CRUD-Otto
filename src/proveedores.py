@@ -31,9 +31,9 @@ class ProveedorApp:
         
         self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3), show="headings", height="8", selectmode="extended")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading(1, text="ID proveedor")
-        self.trv.heading(2, text="Nombre Del proveedor")
-        self.trv.heading(3, text="Contacto Del proveedor")
+        self.trv.heading(1, text="Nro Proveedor")
+        self.trv.heading(2, text="Nombre")
+        self.trv.heading(3, text="Contacto")
         self.trv.column('#1', anchor=tk.CENTER)
         self.trv.column('#2', anchor=tk.CENTER)
         self.trv.column('#3', anchor=tk.CENTER)
