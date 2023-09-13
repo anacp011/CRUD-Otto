@@ -16,10 +16,10 @@ class EtiquetaApp:
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
         
         # Contenedores
-        frame1 = tk.LabelFrame(pestana_Etiquetas, text="Consulta o Filtro de Etiqueta", font=("calibri", 12), relief=tk.SUNKEN)
-        frame1.pack(fill="both", expand="yes", padx=20, pady=20)
+        frame1 = tk.LabelFrame(pestana_Etiquetas)
+        frame1.pack(fill="both", expand="yes", ipady=10, padx=20, pady=20)
         frame1['relief'] = 'flat'
-        frame2 = tk.LabelFrame(pestana_Etiquetas, text="Información de Etiqueta", font=("calibri", 12), relief=tk.SUNKEN)
+        frame2 = tk.LabelFrame(pestana_Etiquetas)
         frame2.pack(fill="both", expand="yes", padx=20, pady=20)
         frame2['relief'] = 'flat'
         pestana_Etiquetas.bind('<Double-Button-1>', self.deseleccionar_fila)
@@ -34,25 +34,24 @@ class EtiquetaApp:
             '  Nombre': 'etq.nombre',
             '  Nro Proveedor': 'pr.nroProvee'
         }
+        ## Botón
+        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
+        btn.pack(side=tk.RIGHT, padx=(0,50))
+        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6)
+        buscar_button.pack(side=tk.RIGHT, padx=(10,20))
         
         ## Filtro
-        self.combo = ttk.Combobox(frame1, values=['', '  Nro Etiquetas', '  Nombre', '  Nro Proveedor'], state='readonly', width=20)
-        self.combo.pack(side=tk.LEFT, padx=20)
-        self.combo.set("Seleccione una opción")
         self.entry = tk.Entry(frame1, width=15)
-        self.entry.pack(side=tk.LEFT, padx=6, ipady=2)
-        
-        ## Botón
-        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6)
-        buscar_button.pack(side=tk.LEFT, padx=(15,10))
-        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
-        btn.pack(side=tk.LEFT, padx=6)
+        self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        self.combo = ttk.Combobox(frame1, values=['', '  Nro Etiquetas', '  Nombre', '  Nro Proveedor'], state='readonly', width=20)
+        self.combo.pack(side=tk.RIGHT)
+        self.combo.set("Seleccione una opción")
         
         ## Tablas
         tree_frame = tk.Frame(frame2)
-        tree_frame.pack(padx=(20, 0), pady=20, fill="both", expand=True)
+        tree_frame.pack(padx=(20, 0), pady=20, fill="both")
         
-        self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3), show="headings", height="8", selectmode="extended")
+        self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
         self.trv.heading('#1', text="Nro Etiqueta")
         self.trv.heading('#2', text="Nombre")

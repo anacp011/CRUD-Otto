@@ -14,11 +14,11 @@ class LoteApp:
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
 
         #Contenedores
-        frame1 = tk.LabelFrame(pestana_lotes, text="Consulta", font=("calibri", 12), relief=tk.SUNKEN)
-        frame1.pack(fill="both", expand="yes", padx=20, pady=(20,5))
+        frame1 = tk.LabelFrame(pestana_lotes)
+        frame1.pack(fill="both", expand="yes", pady=(40,0))
         frame1['relief'] = 'flat'
-        frame2 = tk.LabelFrame(pestana_lotes, text="Informacion de Lotes", font=("calibri", 12), relief=tk.SUNKEN)
-        frame2.pack(fill="both", expand="yes", padx=20, pady=20)
+        frame2 = tk.LabelFrame(pestana_lotes)
+        frame2.pack(fill="both", expand="yes", padx=20, pady=10)
         frame2['relief'] = 'flat'
         pestana_lotes.bind('<Double-Button-1>', self.deseleccionar_fila)
         
@@ -27,24 +27,23 @@ class LoteApp:
         self.cantidad = tk.StringVar()
         self.fecha_inicio = tk.StringVar()
         self.fecha_fin = tk.StringVar()
-
+        
+        # Botón
+        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
+        btn.pack(side=tk.RIGHT, padx=(0,50))
+        btn = tk.Button(frame1, text="Buscar", command=self.consulta, width=6)
+        btn.pack(side=tk.RIGHT, padx=(10,20))
+        
         ## CONSULTA
         self.q = tk.StringVar()
         ent = tk.Entry(frame1, width=15,textvariable=self.q)
-        ent.pack(side=tk.LEFT, padx=20, ipady=2)
-        
-
-        # Botón
-        btn = tk.Button(frame1, text="Buscar", command=self.consulta, width=6)
-        btn.pack(side=tk.LEFT, padx=(15,10))
-        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
-        btn.pack(side=tk.LEFT, padx=6)
+        ent.pack(side=tk.RIGHT, padx=20,ipady=1.5)
         
         ## Tablas
         tree_frame = tk.Frame(frame2)
-        tree_frame.pack(padx=(20, 0), pady=20, fill="both", expand=True)
+        tree_frame.pack(padx=(20, 0), pady=40, fill="both", expand=True)
         
-        self.trv = ttk.Treeview(tree_frame, columns=(1,2,3,4), show="headings", height="8", selectmode = "extended")
+        self.trv = ttk.Treeview(tree_frame, columns=(1,2,3,4), show="headings", height="7")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
         self.trv.heading('#1', text='Nro Lotes')
         self.trv.heading('#2', text='cantidad')
