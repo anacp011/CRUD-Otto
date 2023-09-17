@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import *
 from materia_prima import MateriaPrimaApp
 
 class App:
@@ -32,9 +33,15 @@ class App:
         main_window = tk.Toplevel()  # Crea una nueva ventana
         main_window.title("Programa Principal")
         main_window.geometry("950x500")
+        main_window.config(bg="#6f6f6f")
+        img = PhotoImage(file='C:/Users/Ana/Desktop/CRUD OttoK/filtroclinok.png')
+        main_window.iconphoto(False, img)
+        notebook_style = ttk.Style()
+        notebook_style.configure("TNotebook.Tab",  font=("calibri", 13) , padding=[10, 5])
         notebook = ttk.Notebook(main_window)  # Crea un cuaderno para pestañas
         MateriaPrimaApp(main_window, notebook)  # Inicializa el programa general en la nueva ventana
         notebook.pack(fill="both", expand=True, padx=20, pady=20)  # Empaqueta el cuaderno
+        
         
         
 if __name__ == "__main__":

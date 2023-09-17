@@ -44,7 +44,7 @@ class MatPrimDialog:
             tk.Button(self.dialog, text="Agregar", command=self.guardar_datos).grid(row=4, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
         tk.Button(self.dialog, text="Cancelar", command=self.dialog.destroy).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
-      
+    
     def combo_input(self):
         self.conexion= pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
         self.cursor= self.conexion.cursor()

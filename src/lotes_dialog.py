@@ -79,6 +79,12 @@ class LoteDialog:
 
             fecha_sel_inicio = self.fecha_inicio.get_date()
             fecha_sel_fin = self.fecha_fin.get_date()
+            if fecha_sel_inicio == fecha_sel_fin:
+                messagebox.showerror("Ingreso Fecha", "La fecha de inicio y fin son iguales")
+                return
+            elif fecha_sel_inicio > fecha_sel_fin:
+                messagebox.showerror("Ingreso Fecha", "La fecha de inicio no puede ser después de la fecha final")
+                return
             fecha_mysql_inicio = fecha_sel_inicio.strftime('%Y-%m-%d')
             fecha_mysql_fin = fecha_sel_fin.strftime('%Y-%m-%d')
             
@@ -111,6 +117,14 @@ class LoteDialog:
         else:
             fecha_sel_inicio = self.fecha_inicio.get_date()
             fecha_sel_fin = self.fecha_fin.get_date()
+            
+            if fecha_sel_inicio == fecha_sel_fin:
+                messagebox.showerror("Ingreso Fecha", "La fecha de inicio y fin son iguales")
+                return
+            elif fecha_sel_inicio > fecha_sel_fin:
+                messagebox.showerror("Ingreso Fecha", "La fecha de inicio no puede ser después de la fecha final")
+                return
+            
             fecha_mysql_inicio = fecha_sel_inicio.strftime('%Y-%m-%d')
             fecha_mysql_fin = fecha_sel_fin.strftime('%Y-%m-%d')
             

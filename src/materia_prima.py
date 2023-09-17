@@ -7,6 +7,7 @@ from proveedores import ProveedorApp
 from envases import EnvaseApp
 from etiquetas import EtiquetaApp
 from lotes import LoteApp
+from productos import ProductoApp
 from matprim_dialog import MatPrimDialog
 
 class MateriaPrimaApp:
@@ -15,17 +16,23 @@ class MateriaPrimaApp:
         self.cuaderno1 = cuaderno1
         pestana_MatPrim = tk.Frame(self.cuaderno1)
         self.cuaderno1.add(pestana_MatPrim, text="Materia Prima")
-       
-        style = ttk.Style()
-        style.configure("TNotebook.Tab",  font=("calibri", 13) , padding=[10, 5])
-       
         self.cuaderno1.pack(fill="both", expand=True, padx=10)
-       
+        #pestana_MatPrim.config(bg="#8c8c8c")
+        ## Estilos
+        notebook_style = ttk.Style()
+        notebook_style.configure("TNotebook.Tab",  font=("Helvetica", 13, 'bold') , padding=[10, 5])
+        treeview_style = ttk.Style()
+        #treeview_style.theme_use("clam") # La linea que causa el problema
+        treeview_style.configure("Treeview", background="#d3d3d3", fieldbackground="green", foreground="black", font=("Helvetica", 9))
+        treeview_style.configure("Treeview.Heading", background="#d3d3d3", font=("Helvetica", 10, 'bold'))
+        
         ## Pestañas
+        self.abrir_pestana_producto()
         self.abrir_pestana_proveedor()
         self.abrir_pestana_envase()
         self.abrir_pestana_etiqueta()
         self.abrir_pestana_lote()
+        
         
         ## Contenedores
         frame1 = tk.LabelFrame(pestana_MatPrim)
@@ -35,6 +42,7 @@ class MateriaPrimaApp:
         frame2.pack(fill="both", expand="yes", padx=20, pady=20)
         frame2['relief'] = 'flat'
         pestana_MatPrim.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
         
         #   Variables
         self.NumMatPrim = tk.StringVar()
@@ -47,7 +55,6 @@ class MateriaPrimaApp:
             '  Nombre': 'mp.nombre',
             '  Nro Proveedor': 'pr.nroProvee'
         }
-        
         
         ## Botón
         btn = tk.Button(frame1, text="Restablecer",command=self.restablecer, width=10)
@@ -87,9 +94,12 @@ class MateriaPrimaApp:
         btn.pack(side=tk.LEFT, padx=250)
         btn = tk.Button(frame2, text="Eliminar", command=self.eliminar)
         btn.pack(side=tk.LEFT)
-       
+
+        
+        
         self.actualizar()
-   
+    
+    
     def abrir_pestana_proveedor(self):
         ProveedorApp(self, self.cuaderno1)
    
@@ -101,6 +111,9 @@ class MateriaPrimaApp:
    
     def abrir_pestana_lote(self):
         LoteApp(self, self.cuaderno1)
+    
+    def abrir_pestana_producto(self):
+        ProductoApp(self, self.cuaderno1)
    
     def abrir_ventana_agregar(self):
         MatPrimDialog(self.parent, self)

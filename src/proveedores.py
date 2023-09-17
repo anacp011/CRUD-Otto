@@ -13,6 +13,7 @@ class ProveedorApp:
         self.cuaderno1.add(pestana_proveedores, text="Proveedores")
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
         
+        
         ## Contenedor
         frame1 = tk.LabelFrame(pestana_proveedores)
         frame1.pack(fill="both", expand="yes", pady=(40,0))
@@ -30,7 +31,7 @@ class ProveedorApp:
         tree_frame = tk.Frame(frame2)
         tree_frame.pack(padx=(20, 0), pady=40, fill="both", expand=True)
         
-        self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3), show="headings", height="9")
+        self.trv = ttk.Treeview(tree_frame,  columns=(1, 2, 3), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
         self.trv.heading(1, text="Nro Proveedor")
         self.trv.heading(2, text="Nombre")
@@ -61,7 +62,6 @@ class ProveedorApp:
         btn.pack(side=tk.LEFT)
 
         self.actualizar()
-        
         
     def abrir_ventana_agregar(self):
         ProveedorDialog(self.parent, self)

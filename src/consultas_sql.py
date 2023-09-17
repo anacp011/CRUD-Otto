@@ -39,6 +39,20 @@ class ConexionDB:
         else:
             messagebox.showerror("Error", "No se encontró el proveedor para eliminarlo.")
     
+    def eliminar_producto(self, values):
+        numeroProd = values[0]  # Accede al primer elemento de la tupla 'values'
+        self.cursor.execute("SELECT ID_Prod FROM productos WHERE nroProd = %s", (numeroProd,))
+        result = self.cursor.fetchone()  # Obtiene el resultado de la consulta
+
+        if result:
+            Id_Prod = result[0]  # Obtiene el valor de ID_Prod del resultado de la consulta
+
+            self.cursor.execute("DELETE FROM productos WHERE ID_Prod = %s", (Id_Prod,))
+            self.conexion.commit()  # Realiza el commit después de la operación de eliminación
+            messagebox.showinfo("Producto Eliminado", "El producto ha sido eliminado exitosamente.")
+        else:
+            messagebox.showerror("Error", "No se encontró el producto para eliminarlo.")
+    
     def actualizar_proveedor(self):
         query = "SELECT nroProvee, nombre, contacto FROM proveedores"
         self.cursor.execute(query)
@@ -69,6 +83,22 @@ class ConexionDB:
             messagebox.showerror("Control de Stock", "No existe ese ID de producto")
             return
     
+    def exist_id_LOT (self, Nro_lotes):
+        conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+        cursor = conexion.cursor()
+        
+        cursor.execute("SELECT ID_Lotes FROM lotes WHERE nroLotes = %s", (Nro_lotes,))
+        result = cursor.fetchone()  # Obtiene el resultado de la consulta
+        conexion.commit() 
+        conexion.close()
+        
+        if result:
+            codigo_proveedor = result[0]
+            return codigo_proveedor
+        else:
+            messagebox.showerror("Control de Stock", "No existe ese ID de lotes")
+            return
+        
     def eliminar_envases(self, values):
         numeroEnvases = values[0]  # Accede al primer elemento de la tupla 'values'
         self.cursor.execute("SELECT ID_Envases FROM envases WHERE nroEnvases = %s", (numeroEnvases,))
