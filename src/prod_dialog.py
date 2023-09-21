@@ -87,7 +87,7 @@ class ProdDialog:
         numeroProd = self.values[0]
         conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
         cursor = conexion.cursor()
-        cursor.execute("SELECT ID_Prod, nombre FROM productos WHERE nroProd=%s", (numeroProd,))
+        cursor.execute("SELECT ID_Prod FROM productos WHERE nroProd=%s", (numeroProd,))
         result = cursor.fetchone()[0]
         if result:
             return result
@@ -99,7 +99,6 @@ class ProdDialog:
         count = cursor.fetchone()[0]
         if count > 0:
             return True
-            
     def guardar_datos(self):
         if self.NumeroProd.get() == "" or self.nombre.get() == "" or self.loteNum.get() == "" or self.estado.get() == "":
             messagebox.showerror("Control de Stock", "Ingrese información en todos los campos")
@@ -111,9 +110,8 @@ class ProdDialog:
             conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
             cursor = conexion.cursor()
             
-            if self.new_id():
-                # Muestra el messagebox de error de manera asincrónica
-                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente."))
+            if self.new_id(): # verifica si ya existe el NroProd
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente.")) # Muestra el messagebox de error de manera asincrónica
                 return  # No sigue con la ejecución
             
             cursor.execute("INSERT INTO productos (nroProd, nombre, cantidad, precio, lote_id, est_id) VALUES (%s, %s, %s, %s, %s, %s)", (
@@ -135,6 +133,13 @@ class ProdDialog:
             self.parent_prod.actualizar()
             self.dialog.destroy()
 
+    def map_estado_to_id(self, nombre_estado):
+        estados = {
+            "Finales": 1,
+            "Cuarentena": 2,
+            "Descarte": 3
+        }
+        return estados.get(nombre_estado, None)
     
     def modificar_datos(self):
         if self.NumeroProd.get() == "" or self.nombre.get() == "" or self.loteNum.get() == "" or self.estado.get() == "":
@@ -142,16 +147,19 @@ class ProdDialog:
         else:
             Nro_lote = self.loteNum.get()
             codigo_lote = ConexionDB.exist_id_LOT(self, Nro_lote)
-            id_est = self.estado.get()[0]
-            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
-            cursor = conexion.cursor()
+            #id_est = self.estado.get()[0]
+            nombre_estado = self.estado.get()
+            id_estado = self.map_estado_to_id(nombre_estado)
             
             # Verifica si el número de Producto fue modificado
             if self.values[0] !=  self.NumeroProd.get():
-                if self.new_id():
+                if self.new_id(): # Verifica si ya existe el NroProd
                     # Muestra el messagebox de error de manera asincrónica
                     self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente."))
                     return  # No sigue con la ejecución
+
+            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+            cursor = conexion.cursor()
 
             cursor.execute("UPDATE productos SET nroProd=%s, nombre=%s, cantidad=%s, precio=%s, lote_id=%s, est_id=%s WHERE ID_Prod=%s", (
                 self.NumeroProd.get(),
@@ -159,7 +167,7 @@ class ProdDialog:
                 self.cantidad.get(),
                 self.precio.get(),
                 codigo_lote,
-                id_est,
+                id_estado,  # El valor seleccionado del combobox de estado
                 self.verify_id_PROD(),
             ))
             messagebox.showinfo("Datos Completados", "Se actualizaron correctamente")
@@ -172,6 +180,3 @@ class ProdDialog:
 
             self.parent_prod.actualizar()
             self.dialog.destroy()
-
-
-

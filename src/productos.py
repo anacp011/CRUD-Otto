@@ -18,9 +18,10 @@ class ProductoApp:
         frame1.pack(fill="both", expand="yes", ipady=10, padx=30, pady=(20,30))
         frame1['relief'] = 'flat'
         frame2 = tk.LabelFrame(pestana_productos, relief=tk.SUNKEN)
-        frame2.pack(fill="both", expand="yes",padx=10, pady=(30,10))
+        frame2.pack(fill="both", expand="yes",padx=10, pady=(10,10))
         frame2['relief'] = 'flat'
         pestana_productos.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
         
         #   Variables
         self.NumeroProd = tk.StringVar()
@@ -35,29 +36,34 @@ class ProductoApp:
             '  Nombre': 'prod.nombre',
             '  Nro Lote': 'lot.nroLotes'
         }
+        self.opciones_columnas2 = {
+            '  Todos': 'Todos',
+            '  Finales': 'Finales',
+            '  Descarte': 'Descarte',
+            '  Cuarentena': 'Cuarentena'
+        }
         
         ## Botón
-        btn = tk.Button(frame1, text="Restablecer",command=self.restablecer, width=10) 
+        btn = tk.Button(frame1, text="Restablecer",command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc") 
         btn.pack(side=tk.RIGHT, padx=(0,50))
-        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6) 
+        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6, font=("Cardana",9), bg="#dcdcdc") 
         buscar_button.pack(side=tk.RIGHT, padx=(10,20))
         
         ## Filtro
-        self.entry = tk.Entry(frame1, width=15)
+        self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  Nro Producto', '  Nombre', '  Nro Lote'], state='readonly', width=20)
+        self.combo = ttk.Combobox(frame1, values=['', '  Nro Producto', '  Nombre', '  Nro Lote'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
 
-        self.combo_state = ttk.Combobox(frame1, values=['Todos', 'Finales', 'Descarte', 'Cuarentena'], state='readonly', width=15)
+        self.combo_state = ttk.Combobox(frame1, values=['  Todos', '  Finales', '  Descarte', '  Cuarentena'], state='readonly', width=15, font=("Calibri",11))
         self.combo_state.pack(side=tk.LEFT)
-        self.combo_state.set("Todos")
+        self.combo_state.set("  Todos")
         self.combo_state.bind("<<ComboboxSelected>>", self.estado_seleccionado)
        
         ## Tablas
-        
         tree_frame = tk.Frame(frame2)
-        tree_frame.pack(padx=(20, 0), pady=10,fill="both", expand=True) #
+        tree_frame.pack(padx=(20, 0), pady=10,fill="both") 
         
         self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3, 4, 5, 6), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
@@ -80,14 +86,20 @@ class ProductoApp:
         self.trv.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side=tk.RIGHT, fill="y")
        
-        btn = tk.Button(frame2, text="Agregar", command=self.abrir_ventana_agregar) 
+        btn = tk.Button(frame2, text="Agregar", command=self.abrir_ventana_agregar, width=8, font=("Cardana",9), bg="#dcdcdc") 
         btn.pack(side=tk.LEFT, padx=250)
-        btn = tk.Button(frame2, text="Eliminar", command=self.eliminar) 
+        btn = tk.Button(frame2, text="Eliminar", command=self.eliminar, width=8, font=("Cardana",9), bg="#dcdcdc") 
         btn.pack(side=tk.LEFT)
        
         self.actualizar()
 
-    
+    def abrir_ventana_agregar(self):
+        ProdDialog(self.parent, self)
+        
+    def abrir_ventana_editar(self, item):
+        item = self.trv.focus()
+        if item:
+            ProdDialog(self.parent, self, item)
     
     def actualizar(self):
         self.trv.delete(*self.trv.get_children())
@@ -139,11 +151,13 @@ class ProductoApp:
             messagebox.showerror("Error", f"Contenedor de consulta vacio")
     
     def estado_seleccionado(self, event):
-        opcion = self.combo_state.get()
+        select= self.combo_state.get()
+        opcion = self.opciones_columnas2[select]
         
         if opcion == "Todos":
             self.actualizar()
         else:
+            
             self.trv.delete(*self.trv.get_children())  # Limpiar la Treeview
             
             try:
@@ -162,15 +176,6 @@ class ProductoApp:
             finally:
                 if self.conexion:
                     self.conexion.close()
-
-    
-    def abrir_ventana_agregar(self):
-        ProdDialog(self.parent, self)
-        
-    def abrir_ventana_editar(self, item):
-        item = self.trv.focus()
-        if item:
-            ProdDialog(self.parent, self, item)
             
     def eliminar(self):
         selected_item = self.trv.focus()

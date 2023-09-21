@@ -29,21 +29,21 @@ class LoteApp:
         self.fecha_fin = tk.StringVar()
         
         # Botón
-        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
+        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(0,50))
-        btn = tk.Button(frame1, text="Buscar", command=self.consulta, width=6)
+        btn = tk.Button(frame1, text="Buscar", command=self.consulta, width=6, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(10,20))
         
         ## CONSULTA
         self.q = tk.StringVar()
-        ent = tk.Entry(frame1, width=15,textvariable=self.q)
+        ent = tk.Entry(frame1, width=15,textvariable=self.q, font=("Cardana",10))
         ent.pack(side=tk.RIGHT, padx=20,ipady=1.5)
         
         ## Tablas
         tree_frame = tk.Frame(frame2)
-        tree_frame.pack(padx=(20, 0), pady=40, fill="both", expand=True)
+        tree_frame.pack(padx=(20, 0), pady=(40,0), fill="both")
         
-        self.trv = ttk.Treeview(tree_frame, columns=(1,2,3,4), show="headings", height="7")
+        self.trv = ttk.Treeview(tree_frame, columns=(1,2,3,4), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
         self.trv.heading('#1', text='Nro Lotes')
         self.trv.heading('#2', text='cantidad')
@@ -59,9 +59,9 @@ class LoteApp:
         self.trv.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side=tk.RIGHT, fill="y")
         
-        btn = tk.Button(frame2, text="Agregar", command=self.abrir_ventana_agregar)
+        btn = tk.Button(frame2, text="Agregar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.abrir_ventana_agregar)
         btn.pack(side=tk.LEFT, padx=250)
-        btn = tk.Button(frame2, text="Eliminar", command=self.eliminar)
+        btn = tk.Button(frame2, text="Eliminar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.eliminar)
         btn.pack(side=tk.LEFT)
         
         self.actualizar()

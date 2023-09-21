@@ -14,7 +14,9 @@ class MatPrimDialog:
         self.dialog.geometry("350x300")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
-    
+
+        self.cantidad_var = tk.StringVar()
+        
         tk.Label(self.dialog, text="Nro Materia Prima:").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
         self.NumMatPrim = tk.Entry(self.dialog, width=15)
         self.NumMatPrim.grid(row=0, column=1, sticky=tk.W, pady=(60,0))
@@ -23,7 +25,7 @@ class MatPrimDialog:
         self.nombre = tk.Entry(self.dialog, width=15)
         self.nombre.grid(row=1, column=1, sticky=tk.W, pady=(20,0))
         
-        tk.Label(self.dialog, text="Cantidad:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
+        tk.Label(self.dialog, text="Cantidad:", foreground="black").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
         self.cantidad = tk.Entry(self.dialog, width=15)
         self.cantidad.grid(row=2, column=1, sticky=tk.W, pady=(20,0))
         
@@ -44,6 +46,13 @@ class MatPrimDialog:
             tk.Button(self.dialog, text="Agregar", command=self.guardar_datos).grid(row=4, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
         tk.Button(self.dialog, text="Cancelar", command=self.dialog.destroy).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
+    
+    def _traceHandler(self, x, y, z):
+        # Code block to handle the change in textvariable
+        value = self.get()
+        numeric_value = ''.join(filter(str.isdigit, value))  # Extract numeric part
+        self.delete(0, tk.END)  # Clear the entry
+        self.insert(0, numeric_value)  # Insert the numeric part
     
     def combo_input(self):
         self.conexion= pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")

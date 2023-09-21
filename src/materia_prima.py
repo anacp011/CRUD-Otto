@@ -17,14 +17,11 @@ class MateriaPrimaApp:
         pestana_MatPrim = tk.Frame(self.cuaderno1)
         self.cuaderno1.add(pestana_MatPrim, text="Materia Prima")
         self.cuaderno1.pack(fill="both", expand=True, padx=10)
-        #pestana_MatPrim.config(bg="#8c8c8c")
-        ## Estilos
-        notebook_style = ttk.Style()
-        notebook_style.configure("TNotebook.Tab",  font=("Helvetica", 13, 'bold') , padding=[10, 5])
-        treeview_style = ttk.Style()
-        #treeview_style.theme_use("clam") # La linea que causa el problema
-        treeview_style.configure("Treeview", background="#d3d3d3", fieldbackground="green", foreground="black", font=("Helvetica", 9))
-        treeview_style.configure("Treeview.Heading", background="#d3d3d3", font=("Helvetica", 10, 'bold'))
+        
+        style1 = ttk.Style()
+        style1.configure("Treeview", background="#d3d3d3", fieldbackground="green", foreground="black", font=("Helvetica", 9))
+        style1.configure("Treeview.Heading", background="Blackd3d3d3", font=("Helvetica", 10, 'bold'))
+
         
         ## Pestañas
         self.abrir_pestana_producto()
@@ -57,15 +54,15 @@ class MateriaPrimaApp:
         }
         
         ## Botón
-        btn = tk.Button(frame1, text="Restablecer",command=self.restablecer, width=10)
-        btn.pack(side=tk.RIGHT, padx=(0,50))
-        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6)
-        buscar_button.pack(side=tk.RIGHT, padx=(10,20))
+        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc")
+        btn.pack(side=tk.RIGHT, padx=(0,50), ipady=2)
+        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6, font=("Cardana",9), bg="#dcdcdc")
+        buscar_button.pack(side=tk.RIGHT, padx=(10,20), ipady=2)
         
         ## Filtro
-        self.entry = tk.Entry(frame1, width=15)
+        self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  Nro MateriaPrima', '  Nombre', '  Nro Proveedor'], state='readonly', width=20)
+        self.combo = ttk.Combobox(frame1, values=['', '  Nro MateriaPrima', '  Nombre', '  Nro Proveedor'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
        
@@ -90,10 +87,10 @@ class MateriaPrimaApp:
         self.trv.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side=tk.RIGHT, fill="y")
        
-        btn = tk.Button(frame2, text="Agregar", command=self.abrir_ventana_agregar)
-        btn.pack(side=tk.LEFT, padx=250)
-        btn = tk.Button(frame2, text="Eliminar", command=self.eliminar)
-        btn.pack(side=tk.LEFT)
+        btn = tk.Button(frame2, text="Agregar", command=self.abrir_ventana_agregar, width=8, font=("Cardana",9), bg="#dcdcdc")
+        btn.pack(side=tk.LEFT, padx=250, ipady=2)
+        btn = tk.Button(frame2, text="Eliminar", command=self.eliminar, width=8, font=("Cardana",9), bg="#dcdcdc")
+        btn.pack(side=tk.LEFT, ipady=2)
 
         
         

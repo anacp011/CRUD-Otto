@@ -35,13 +35,13 @@ class EtiquetaApp:
             '  Nro Proveedor': 'pr.nroProvee'
         }
         ## Botón
-        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10)
+        btn = tk.Button(frame1, text="Restablecer", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.restablecer)
         btn.pack(side=tk.RIGHT, padx=(0,50))
-        buscar_button = tk.Button(frame1, text="Buscar", command=self.buscar, width=6)
+        buscar_button = tk.Button(frame1, text="Buscar", width=6, font=("Cardana",9), bg="#dcdcdc", command=self.buscar)
         buscar_button.pack(side=tk.RIGHT, padx=(10,20))
         
         ## Filtro
-        self.entry = tk.Entry(frame1, width=15)
+        self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
         self.combo = ttk.Combobox(frame1, values=['', '  Nro Etiquetas', '  Nombre', '  Nro Proveedor'], state='readonly', width=20)
         self.combo.pack(side=tk.RIGHT)
@@ -66,9 +66,9 @@ class EtiquetaApp:
         self.trv.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side=tk.RIGHT, fill="y")
         
-        btn = tk.Button(frame2, text="Agregar", command=self.abrir_ventana_agregar)
+        btn = tk.Button(frame2, text="Agregar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.abrir_ventana_agregar)
         btn.pack(side=tk.LEFT, padx=250)
-        btn = tk.Button(frame2, text="Eliminar", command=self.eliminar)
+        btn = tk.Button(frame2, text="Eliminar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.eliminar)
         btn.pack(side=tk.LEFT)
         
         self.actualizar()

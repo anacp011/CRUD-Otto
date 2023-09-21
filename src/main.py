@@ -7,4 +7,5 @@ if __name__ == '__main__':
     app = App(root)
     img = PhotoImage(file='C:/Users/Ana/Desktop/CRUD OttoK/filtroclinok.png')
     root.iconphoto(False, img)
+    
     root.mainloop()
