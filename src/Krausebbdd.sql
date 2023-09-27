@@ -14,7 +14,7 @@ CREATE TABLE materias_primas (
  ID_MatPrim INT AUTO_INCREMENT PRIMARY KEY,
  nroMatPrim INT UNIQUE NOT NULL,
  nombre VARCHAR(100) NOT NULL,
- cantidad INT NOT NULL,
+ cantidad VARCHAR NOT NULL,
  proveedor_id INT,
  FOREIGN KEY (proveedor_id) REFERENCES proveedores(ID_Provee)
 );

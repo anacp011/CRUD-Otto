@@ -91,7 +91,8 @@ class LoteDialog:
             conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
             cursor = conexion.cursor()
             if self.new_id():
-                conexion.close()
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de lote ya existe actualmente."))
+                return
             else:
                 cursor.execute("INSERT INTO lotes (nroLotes, cantidad, fecha_inicio, fecha_fin) VALUES (%s, %s, %s, %s)", (
                     self.NumLotes.get(),
@@ -132,7 +133,7 @@ class LoteDialog:
             cursor = conexion.cursor()
             if self.values[0] != self.NumLotes.get():
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de etiqueta ya existe actualmente."))
+                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de lote ya existe actualmente."))
                     return
                 
             cursor.execute("UPDATE lotes SET nroLotes=%s, cantidad=%s,  fecha_inicio=%s,  fecha_fin=%s WHERE ID_Lotes=%s", (

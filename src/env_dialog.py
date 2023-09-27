@@ -84,7 +84,8 @@ class EnvaseDialog:
             cursor = conexion.cursor()
 
             if self.new_id():
-                conexion.close()
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de envase ya existe actualmente."))
+                return
             else:
                 cursor.execute("INSERT INTO envases (nroEnvases, nombre, proveedor_id) VALUES (%s, %s, %s)", (
                     self.NumEnvases.get(),
@@ -114,7 +115,7 @@ class EnvaseDialog:
             
             if self.values[0] != self.NumEnvases.get():
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de producto ya existe actualmente."))
+                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de envase ya existe actualmente."))
                     return
             
             cursor.execute("UPDATE envases SET nroEnvases=%s, nombre=%s, proveedor_id=%s WHERE ID_Envases=%s", (

@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import pymysql
 from consultas_sql import ConexionDB
+import re
 
 class MatPrimDialog:
     def __init__(self, parent, parent_matprim, item=None, callback=None):
@@ -47,12 +48,18 @@ class MatPrimDialog:
 
         tk.Button(self.dialog, text="Cancelar", command=self.dialog.destroy).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
     
-    def _traceHandler(self, x, y, z):
-        # Code block to handle the change in textvariable
-        value = self.get()
-        numeric_value = ''.join(filter(str.isdigit, value))  # Extract numeric part
-        self.delete(0, tk.END)  # Clear the entry
-        self.insert(0, numeric_value)  # Insert the numeric part
+    #def _traceHandler(self, x, y, z):
+    #    # Code block to handle the change in textvariable
+    #    value = self.get()
+    #    numeric_value = ''.join(filter(str.isdigit, value))  # Extract numeric part
+    #    self.delete(0, tk.END)  # Clear the entry
+    #    self.insert(0, numeric_value)  # Insert the numeric part
+    
+    def split_cantidad(self):    
+        match = re.match(r"([0-9]+)([a-z]+)", self.cantidad.get(), re.I)
+        if match:
+            items = match.groups()[0]
+            return items
     
     def combo_input(self):
         self.conexion= pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
@@ -101,7 +108,7 @@ class MatPrimDialog:
                 cursor.execute("INSERT INTO materias_primas (nroMatPrim, nombre, cantidad, proveedor_id) VALUES (%s, %s, %s, %s)", (
                     self.NumMatPrim.get(),
                     self.nombre.get(),
-                    self.cantidad.get(),
+                    self.split_cantidad,
                     codigo_proveedor,
                 ))
                 messagebox.showinfo("Datos Completados", "Se agregaron correctamente")

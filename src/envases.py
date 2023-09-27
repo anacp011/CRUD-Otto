@@ -43,7 +43,7 @@ class EnvaseApp:
         ## Filtro
         self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  Nro Envases', '  Nombre', '  Nro Proveedor'], state='readonly', width=20)
+        self.combo = ttk.Combobox(frame1, values=['', '  Nro Envases', '  Nombre', '  Nro Proveedor'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
         

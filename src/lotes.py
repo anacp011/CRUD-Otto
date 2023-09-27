@@ -36,7 +36,7 @@ class LoteApp:
         
         ## CONSULTA
         self.q = tk.StringVar()
-        ent = tk.Entry(frame1, width=15,textvariable=self.q, font=("Cardana",10))
+        ent = tk.Entry(frame1, textvariable=self.q, width=15, font=("Cardana",10))
         ent.pack(side=tk.RIGHT, padx=20,ipady=1.5)
         
         ## Tablas
@@ -59,9 +59,9 @@ class LoteApp:
         self.trv.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side=tk.RIGHT, fill="y")
         
-        btn = tk.Button(frame2, text="Agregar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.abrir_ventana_agregar)
+        btn = tk.Button(frame2, text="Agregar", width=8, font=("Cardana",9), bg="#dcdcdc", command=self.abrir_ventana_agregar)
         btn.pack(side=tk.LEFT, padx=250)
-        btn = tk.Button(frame2, text="Eliminar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.eliminar)
+        btn = tk.Button(frame2, text="Eliminar", width=8, font=("Cardana",9), bg="#dcdcdc", command=self.eliminar)
         btn.pack(side=tk.LEFT)
         
         self.actualizar()

@@ -99,6 +99,7 @@ class ProdDialog:
         count = cursor.fetchone()[0]
         if count > 0:
             return True
+        
     def guardar_datos(self):
         if self.NumeroProd.get() == "" or self.nombre.get() == "" or self.loteNum.get() == "" or self.estado.get() == "":
             messagebox.showerror("Control de Stock", "Ingrese información en todos los campos")

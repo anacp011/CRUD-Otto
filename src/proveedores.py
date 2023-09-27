@@ -13,7 +13,6 @@ class ProveedorApp:
         self.cuaderno1.add(pestana_proveedores, text="Proveedores")
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
         
-        
         ## Contenedor
         frame1 = tk.LabelFrame(pestana_proveedores)
         frame1.pack(fill="both", expand="yes", pady=(40,0))

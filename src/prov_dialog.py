@@ -53,7 +53,7 @@ class ProveedorDialog:
     def new_id(self):
         conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
         cursor = conexion.cursor()
-        cursor.execute("SELECT COUNT(*) FROM proveedores WHERE nroProvee=%s", (self.NumProvee,))
+        cursor.execute("SELECT COUNT(*) FROM proveedores WHERE nroProvee=%s", (self.NumProvee.get(),))
         count = cursor.fetchone()[0]
         if count > 0:
             return True
@@ -66,7 +66,8 @@ class ProveedorDialog:
             cursor = conexion.cursor()
             
             if self.new_id():
-                conexion.close()
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de proveedor ya existe actualmente."))
+                return
             else:
                 cursor.execute("INSERT INTO proveedores (nroProvee, nombre, contacto) VALUES (%s, %s, %s)", (
                     self.NumProvee.get(),
@@ -94,7 +95,7 @@ class ProveedorDialog:
             
             if self.values[0] != self.NumProvee.get():
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de producto ya existe actualmente."))
+                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de proveedor ya existe actualmente."))
                     return
                     
             cursor.execute("UPDATE proveedores SET nroProvee=%s, nombre=%s, contacto=%s WHERE ID_Provee=%s", (

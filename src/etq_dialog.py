@@ -84,7 +84,8 @@ class EtiquetaDialog:
             cursor = conexion.cursor()
             
             if self.new_id():
-                conexion.close()
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de etiqueta ya existe actualmente."))
+                return
             else:
                 cursor.execute("INSERT INTO etiquetas (nroEtiquetas, nombre, proveedor_id) VALUES (%s, %s, %s)", (
                     self.NumEtiquetas.get(),

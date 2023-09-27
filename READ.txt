@@ -1,0 +1,3 @@
+Pes q no tienen verif : 
+proveedores
+envase mensaje ocn nombre de producto

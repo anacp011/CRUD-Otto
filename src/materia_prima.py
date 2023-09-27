@@ -21,7 +21,6 @@ class MateriaPrimaApp:
         style1 = ttk.Style()
         style1.configure("Treeview", background="#d3d3d3", fieldbackground="green", foreground="black", font=("Helvetica", 9))
         style1.configure("Treeview.Heading", background="Blackd3d3d3", font=("Helvetica", 10, 'bold'))
-
         
         ## Pestañas
         self.abrir_pestana_producto()
