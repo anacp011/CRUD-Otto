@@ -3,7 +3,7 @@ from tkinter import ttk
 import pymysql
 from tkinter import messagebox
 from consultas_sql import ConexionDB
-from etq_dialog import EtiquetaDialog
+from dialog.etq_dialog import EtiquetaDialog
 
 class EtiquetaApp:
     def __init__(self, parent, cuaderno1):
@@ -14,6 +14,7 @@ class EtiquetaApp:
         style = ttk.Style()
         style.configure("TNotebook.Tab", font=("calibri", 12))
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
+        self.top_open = False
         
         # Contenedores
         frame1 = tk.LabelFrame(pestana_Etiquetas)
@@ -74,11 +75,19 @@ class EtiquetaApp:
         self.actualizar()
         
     def abrir_ventana_agregar(self):
-        EtiquetaDialog(self.parent, self)
+        if not self.top_open:
+            self.top_open = True
+            EtiquetaDialog(self.parent, self)
     
     def abrir_ventana_editar(self, item):
-        item = self.trv.focus()
-        EtiquetaDialog(self.parent, self, item)
+        if not self.top_open:
+            self.top_open = True
+            item = self.trv.focus()
+            if item:
+                EtiquetaDialog(self.parent, self, item)
+    
+    def top_close(self):
+        self.top_open = False
     
     def buscar(self):
         opcion = self.combo.get()

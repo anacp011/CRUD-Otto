@@ -3,7 +3,7 @@ import customtkinter
 import tkinter as tk
 from tkinter import ttk
 from tkinter import *
-from materia_prima import MateriaPrimaApp
+from notebook_tab.materia_prima import MateriaPrimaApp
 from PIL import ImageTk, Image
 
 customtkinter.set_appearance_mode("dark") 

@@ -3,7 +3,7 @@ from tkinter import ttk
 import pymysql
 from consultas_sql import ConexionDB
 from tkinter import messagebox
-from lotes_dialog import LoteDialog
+from dialog.lotes_dialog import LoteDialog
 
 class LoteApp:
     def __init__(self, parent, cuaderno1):
@@ -12,6 +12,7 @@ class LoteApp:
         pestana_lotes = ttk.Frame(self.cuaderno1)
         self.cuaderno1.add(pestana_lotes, text="Lotes")
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
+        self.top_open = False
 
         #Contenedores
         frame1 = tk.LabelFrame(pestana_lotes)
@@ -67,11 +68,19 @@ class LoteApp:
         self.actualizar()
             
     def abrir_ventana_agregar(self):
-        LoteDialog(self.parent, self)
+        if not self.top_open:
+            self.top_open = True
+            LoteDialog(self.parent, self)
     
     def abrir_ventana_editar(self, item):
-        item = self.trv.focus()
-        LoteDialog(self.parent, self, item)
+        if not self.top_open:
+            self.top_open = True
+            item = self.trv.focus()
+            if item:
+                LoteDialog(self.parent, self, item)
+    
+    def top_close(self):
+        self.top_open = False
     
     def vista(self, rows):
         self.trv.delete(*self.trv.get_children())

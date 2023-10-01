@@ -31,7 +31,7 @@ class MatPrimDialog:
         self.cantidad.grid(row=2, column=1, sticky=tk.W, pady=(20,0))
         
         tk.Label(self.dialog, text="Nro Proveedor").grid(row=3, column=0, sticky=tk.NS, pady=(20,0))
-        self.proveedorNum = ttk.Combobox(self.dialog, width=12)
+        self.proveedorNum = ttk.Combobox(self.dialog, width=12, height=5)
         self.proveedorNum.grid(row=3, column=1, sticky=tk.W, pady=(20,0))
         self.proveedorNum['values'] = self.combo_input() 
 
@@ -46,14 +46,13 @@ class MatPrimDialog:
         else:
             tk.Button(self.dialog, text="Agregar", command=self.guardar_datos).grid(row=4, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
-        tk.Button(self.dialog, text="Cancelar", command=self.dialog.destroy).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
+        tk.Button(self.dialog, text="Cancelar", command=self.on_close).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
     
-    #def _traceHandler(self, x, y, z):
-    #    # Code block to handle the change in textvariable
-    #    value = self.get()
-    #    numeric_value = ''.join(filter(str.isdigit, value))  # Extract numeric part
-    #    self.delete(0, tk.END)  # Clear the entry
-    #    self.insert(0, numeric_value)  # Insert the numeric part
+        self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+    def on_close(self):
+        self.dialog.destroy()
+        self.parent_matprim.top_close()
     
     def split_cantidad(self):    
         match = re.match(r"([0-9]+)([a-z]+)", self.cantidad.get(), re.I)

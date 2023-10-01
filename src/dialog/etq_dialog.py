@@ -25,7 +25,7 @@ class EtiquetaDialog:
         
         tk.Label(self.dialog, text="Nro Proveedor:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
         
-        self.proveedorNum = ttk.Combobox(self.dialog, width=12)
+        self.proveedorNum = ttk.Combobox(self.dialog, width=12, height=5)
         self.proveedorNum.grid(row=2, column=1, sticky=tk.W, pady=(20,0))
         self.proveedorNum['values'] = self.combo_input() 
 
@@ -39,8 +39,14 @@ class EtiquetaDialog:
         else:
             tk.Button(self.dialog, text="Agregar", command=self.guardar_datos).grid(row=3, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
-        tk.Button(self.dialog, text="Cancelar", command=self.dialog.destroy).grid(row=3, column=1, sticky=tk.W, padx=15, pady=(50,0))
-      
+        tk.Button(self.dialog, text="Cancelar", command=self.on_close).grid(row=3, column=1, sticky=tk.W, padx=15, pady=(50,0))
+    
+        self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+    def on_close(self):
+        self.dialog.destroy()
+        self.parent_etq.top_close()
+    
     def combo_input(self):
         self.conexion= pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
         self.cursor= self.conexion.cursor()
@@ -101,7 +107,7 @@ class EtiquetaDialog:
                     self.callback()
 
                 self.parent_etq.actualizar()
-                self.dialog.destroy()
+                self.on_close()
 
     def modificar_datos(self):
         if self.NumEtiquetas.get() == "" or self.nombre.get() == "":
@@ -132,5 +138,5 @@ class EtiquetaDialog:
                 self.callback()
 
             self.parent_etq.actualizar()
-            self.dialog.destroy()           
+            self.on_close()           
 

@@ -3,7 +3,7 @@ from tkinter import ttk
 import pymysql
 from tkinter import messagebox
 from consultas_sql import ConexionDB
-from prod_dialog import ProdDialog
+from dialog.prod_dialog import ProdDialog
 
 class ProductoApp:
     def __init__(self, parent, cuaderno1):
@@ -12,6 +12,7 @@ class ProductoApp:
         pestana_productos = ttk.Frame(self.cuaderno1)
         self.cuaderno1.add(pestana_productos, text="Productos")
         self.cuaderno1.pack(fill="both", expand=True, padx=10)
+        self.top_open = False
 
         ## Contenedores
         frame1 = tk.LabelFrame(pestana_productos, relief=tk.SUNKEN)
@@ -94,18 +95,25 @@ class ProductoApp:
         self.actualizar()
 
     def abrir_ventana_agregar(self):
-        ProdDialog(self.parent, self)
-        
+        if not self.top_open:
+            self.top_open = True
+            ProdDialog(self.parent, self)
+    
     def abrir_ventana_editar(self, item):
-        item = self.trv.focus()
-        if item:
-            ProdDialog(self.parent, self, item)
+        if not self.top_open:
+            self.top_open = True
+            item = self.trv.focus()
+            if item:
+                ProdDialog(self.parent, self, item)
+    
+    def top_close(self):
+        self.top_open = False
     
     def actualizar(self):
         self.trv.delete(*self.trv.get_children())
         try:
             self.conexion = ConexionDB(self)
-            query = "SELECT prod.nroProd, prod.nombre, prod.cantidad, prod.precio, lot.nroLotes, est.nombre_est FROM productos prod INNER JOIN lotes lot ON prod.lote_id = lot.ID_Lotes INNER JOIN estado est ON prod.est_id = est.ID_Estados"
+            query = "SELECT prod.nroProd, prod.nombre, prod.cantidad, prod.precio, lot.nroLotes, est.nombre_est FROM productos prod INNER JOIN lotes lot ON prod.lote_id = lot.ID_Lotes INNER JOIN estado est ON prod.est_id = est.ID_Estados ORDER BY  prod.ID_Prod ASC"
             self.conexion.cursor.execute(query)
             rows = self.conexion.cursor.fetchall()
             for i in rows:
@@ -121,8 +129,7 @@ class ProductoApp:
         self.combo_state.set("Todos")
         self.entry.delete(0, tk.END)  # Borra el contenido del Entry
         self.actualizar()
-   
-
+    
     def buscar(self):
         opcion = self.combo.get()
         valor = self.entry.get()

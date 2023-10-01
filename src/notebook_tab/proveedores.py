@@ -3,7 +3,7 @@ from tkinter import ttk
 import pymysql
 from tkinter import messagebox
 from consultas_sql import ConexionDB
-from prov_dialog import ProveedorDialog
+from dialog.prov_dialog import ProveedorDialog
 
 class ProveedorApp:
     def __init__(self, parent, cuaderno1):
@@ -12,6 +12,7 @@ class ProveedorApp:
         pestana_proveedores = ttk.Frame(self.cuaderno1)
         self.cuaderno1.add(pestana_proveedores, text="Proveedores")
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
+        self.top_open = False
         
         ## Contenedor
         frame1 = tk.LabelFrame(pestana_proveedores)
@@ -63,11 +64,19 @@ class ProveedorApp:
         self.actualizar()
         
     def abrir_ventana_agregar(self):
-        ProveedorDialog(self.parent, self)
+        if not self.top_open:
+            self.top_open = True
+            ProveedorDialog(self.parent, self)
     
     def abrir_ventana_editar(self, item):
-        item = self.trv.focus()
-        ProveedorDialog(self.parent, self, item)
+        if not self.top_open:
+            self.top_open = True
+            item = self.trv.focus()
+            if item:
+                ProveedorDialog(self.parent, self, item)
+    
+    def top_close(self):
+        self.top_open = False
     
     def vista(self, rows):
         self.trv.delete(*self.trv.get_children())

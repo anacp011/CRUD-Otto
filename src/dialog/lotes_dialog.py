@@ -52,7 +52,13 @@ class LoteDialog:
         else:
             tk.Button(frame, text="Agregar", command=self.guardar_datos).grid(row=4, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
-        tk.Button(frame, text="Cancelar", command=self.dialog.destroy).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
+        tk.Button(frame, text="Cancelar", command=self.on_close).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
+    
+        self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+    def on_close(self):
+        self.dialog.destroy()
+        self.parent_lot.top_close()
     
     def verify_id_LOT(self):
         numeroLot = self.values[0]
@@ -109,7 +115,7 @@ class LoteDialog:
                     self.callback()
 
                 self.parent_lot.actualizar()
-                self.dialog.destroy()
+                self.on_close()
     
     
     def modificar_datos(self):
@@ -152,4 +158,4 @@ class LoteDialog:
                 self.callback()
 
             self.parent_lot.actualizar()
-            self.dialog.destroy()           
+            self.on_close()           

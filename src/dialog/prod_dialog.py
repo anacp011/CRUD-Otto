@@ -32,7 +32,7 @@ class ProdDialog:
         self.precio.grid(row=3, column=1, sticky=tk.W, pady=(20,0))
         
         tk.Label(self.dialog, text="Nro lote").grid(row=4, column=0, sticky=tk.NS, pady=(20,0))
-        self.loteNum = ttk.Combobox(self.dialog, width=12)
+        self.loteNum = ttk.Combobox(self.dialog, width=12, height=5)
         self.loteNum.grid(row=4, column=1, sticky=tk.W, pady=(20,0))
         self.loteNum['values'] = self.combo_input_LOT() 
         
@@ -54,7 +54,13 @@ class ProdDialog:
         else:
             tk.Button(self.dialog, text="Agregar", command=self.guardar_datos).grid(row=6, column=0, sticky=tk.E, padx=15, pady=(60,0))
 
-        tk.Button(self.dialog, text="Cancelar", command=self.dialog.destroy).grid(row=6, column=1, sticky=tk.W, padx=15, pady=(60,0))
+        tk.Button(self.dialog, text="Cancelar", command=self.on_close).grid(row=6, column=1, sticky=tk.W, padx=15, pady=(60,0))
+
+        self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+    def on_close(self):
+        self.dialog.destroy()
+        self.parent_prod.top_close()
       
     def combo_input_LOT(self):
         self.conexion= pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
@@ -132,7 +138,7 @@ class ProdDialog:
                 self.callback()
 
             self.parent_prod.actualizar()
-            self.dialog.destroy()
+            self.on_close()
 
     def map_estado_to_id(self, nombre_estado):
         estados = {
@@ -180,4 +186,4 @@ class ProdDialog:
                 self.callback()
 
             self.parent_prod.actualizar()
-            self.dialog.destroy()
+            self.on_close()

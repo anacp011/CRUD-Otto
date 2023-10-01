@@ -37,8 +37,13 @@ class ProveedorDialog:
         else:
             tk.Button(self.dialog, text="Agregar", command=self.guardar_datos).grid(row=3, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
-        tk.Button(self.dialog, text="Cancelar", command=self.dialog.destroy).grid(row=3, column=1, sticky=tk.W, padx=15, pady=(50,0))
-    
+        tk.Button(self.dialog, text="Cancelar", command=self.on_close).grid(row=3, column=1, sticky=tk.W, padx=15, pady=(50,0))
+        
+        self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+    def on_close(self):
+        self.dialog.destroy()
+        self.parent_prov.top_close()
     
     def verify_id_PR(self):
         numeroProvee = self.values[0]
@@ -83,7 +88,7 @@ class ProveedorDialog:
                     self.callback()
 
                 self.parent_prov.actualizar()
-                self.dialog.destroy()
+                self.on_close()
     
     
     def modificar_datos(self):
@@ -113,7 +118,7 @@ class ProveedorDialog:
                 self.callback()
 
             self.parent_prov.actualizar()
-            self.dialog.destroy()         
+            self.on_close()         
 
         
         
