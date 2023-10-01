@@ -29,16 +29,25 @@ class LoteApp:
         self.fecha_inicio = tk.StringVar()
         self.fecha_fin = tk.StringVar()
         
+        self.opciones_columnas = {
+            '  ID Lote': 'nroLotes',
+            '  Cantidad': 'cantidad',
+            '  Fecha Inicio': 'fecha_inicio',
+            '  Fecha Fin': 'fecha_fin'
+        }
+        
         # Botón
         btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(0,50))
-        btn = tk.Button(frame1, text="Buscar", command=self.consulta, width=6, font=("Cardana",9), bg="#dcdcdc")
+        btn = tk.Button(frame1, text="Buscar", command=self.buscar, width=6, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(10,20))
         
         ## CONSULTA
-        self.q = tk.StringVar()
-        ent = tk.Entry(frame1, textvariable=self.q, width=15, font=("Cardana",10))
-        ent.pack(side=tk.RIGHT, padx=20,ipady=1.5)
+        self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
+        self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        self.combo = ttk.Combobox(frame1, values=['', '  ID Lote', '  Cantidad', '  Fecha Inicio', '  Fecha Fin'], state='readonly', width=20, font=("Calibri",11))
+        self.combo.pack(side=tk.RIGHT)
+        self.combo.set("Seleccione una opción")
         
         ## Tablas
         tree_frame = tk.Frame(frame2)
@@ -46,10 +55,10 @@ class LoteApp:
         
         self.trv = ttk.Treeview(tree_frame, columns=(1,2,3,4), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading('#1', text='Nro Lotes')
-        self.trv.heading('#2', text='cantidad')
-        self.trv.heading('#3', text='fecha_inicio')
-        self.trv.heading('#4', text='fecha_fin')
+        self.trv.heading('#1', text='ID Lotes', command= lambda col=1: self.heading_order(col))
+        self.trv.heading('#2', text='Cantidad', command= lambda col=2: self.heading_order(col))
+        self.trv.heading('#3', text='Fecha inicio', command= lambda col=3: self.heading_order(col))
+        self.trv.heading('#4', text='Fecha fin', command= lambda col=4: self.heading_order(col))
         self.trv.column('#1', anchor=tk.CENTER)
         self.trv.column('#2', anchor=tk.CENTER)
         self.trv.column('#3', anchor=tk.CENTER)
@@ -87,31 +96,79 @@ class LoteApp:
         for i in rows:
             self.trv.insert("", "end", values=i)
     
-    def actualizar(self):
-        try:
-            conexion = ConexionDB(self)  # Crea una instancia de la clase ConexionDB
-            conexion.actualizar_lotes()
-        except pymysql.Error as e:
-            messagebox.showerror("Error", f"No se pudo actualizar la tabla de lotess: {str(e)}")
-        finally:
-            conexion.close()
-            
-    def consulta(self):
-        conexion = ConexionDB(self)  
-        if self.q.get() == "":
-            messagebox.showerror("Búsqueda", f"Contenedor de consulta vacio")
-            conexion.close()
-        else:
+    def buscar(self):
+        opcion = self.combo.get()
+        valor = self.entry.get()
+        self.trv.delete(*self.trv.get_children())  # Limpiar la Treeview
+       
+        if opcion in self.opciones_columnas:
+            columna = self.opciones_columnas[opcion]
             try:
-                q2 = self.q.get()
-                conexion.consulta_lotes(q2)
+                self.conexion = ConexionDB(self)
+                query = f"SELECT nroLotes, cantidad, fecha_inicio, fecha_fin FROM Lotes WHERE {columna} = %s"
+                self.conexion.cursor.execute(query, (valor,))
+                resultados = self.conexion.cursor.fetchall()
+
+                if resultados:
+                    for registro in resultados:
+                        self.trv.insert('', 'end', values=registro)
+                else:
+                    messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
             except pymysql.Error as e:
-                messagebox.showerror("Error", f"No se pudo realizar la consulta de lotes: {str(e)}")
+                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
             finally:
-                conexion.close()
+                if self.conexion:
+                    self.conexion.close()
+        else:
+            self.actualizar()
+            messagebox.showerror("Error", f"Contenedor de consulta vacio")
+    
+    def heading_order(self, col):
+        
+        self.col_op = {
+            1: 'nroLotes',
+            2: 'cantidad',
+            3: 'fecha_inicio',
+            4: 'fecha_fin'
+        }
+        
+        columna = self.col_op[col]
+        self.trv.delete(*self.trv.get_children())
+        try:
+            self.conexion = ConexionDB(self)
+            query = f"SELECT nroLotes, cantidad, fecha_inicio, fecha_fin FROM lotes ORDER BY {columna} ASC"
+            self.conexion.cursor.execute(query)
+            resultados = self.conexion.cursor.fetchall()
+
+            if resultados:
+                for registro in resultados:
+                    self.trv.insert('', 'end', values=registro)
+            else:
+                messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+        except pymysql.Error as e:
+                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
+    
+    def actualizar(self):
+        self.trv.delete(*self.trv.get_children())
+        try:
+            self.conexion = ConexionDB(self)
+            query = "SELECT nroLotes, cantidad, fecha_inicio, fecha_fin FROM lotes"
+            self.conexion.cursor.execute(query)
+            rows = self.conexion.cursor.fetchall()
+            for i in rows:
+                self.trv.insert("", "end", values=i)
+        except pymysql.Error as e:
+            messagebox.showerror("Error", f"No se pudo obtener los datos: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
             
     def restablecer(self):
-        self.q.set("")
+        self.combo.set("Seleccione una opción")  # Restablece el Combobox a una cadena vacía
+        self.entry.delete(0, tk.END)  # Borra el contenido del Entry
         self.actualizar()
     
     def eliminar(self):

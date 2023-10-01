@@ -33,9 +33,9 @@ class ProductoApp:
         self.estado_id = tk.StringVar()
         
         self.opciones_columnas1 = {
-            '  Nro Producto': 'prod.nroProd',
+            '  ID Producto': 'prod.nroProd',
             '  Nombre': 'prod.nombre',
-            '  Nro Lote': 'lot.nroLotes'
+            '  ID Lote': 'lot.nroLotes'
         }
         self.opciones_columnas2 = {
             '  Todos': 'Todos',
@@ -53,7 +53,7 @@ class ProductoApp:
         ## Filtro
         self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  Nro Producto', '  Nombre', '  Nro Lote'], state='readonly', width=20, font=("Calibri",11))
+        self.combo = ttk.Combobox(frame1, values=['', '  ID Producto', '  Nombre', '  ID Lote'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
 
@@ -68,11 +68,11 @@ class ProductoApp:
         
         self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3, 4, 5, 6), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading('#1', text="Nro Productos")
-        self.trv.heading('#2', text="Nombre")
-        self.trv.heading('#3', text="Cantidad")
-        self.trv.heading('#4', text="Precio")
-        self.trv.heading('#5', text="Nro Lote")
+        self.trv.heading('#1', text="ID Productos", command= lambda col=1: self.heading_order(col))
+        self.trv.heading('#2', text="Nombre", command= lambda col=2: self.heading_order(col))
+        self.trv.heading('#3', text="Cantidad", command= lambda col=3: self.heading_order(col))
+        self.trv.heading('#4', text="Precio", command= lambda col=4: self.heading_order(col))
+        self.trv.heading('#5', text="ID Lote", command= lambda col=5: self.heading_order(col))
         self.trv.heading('#6', text="Estado")
        
         self.trv.column('#1', anchor=tk.CENTER, width=140)
@@ -156,6 +156,35 @@ class ProductoApp:
         else:
             self.actualizar()
             messagebox.showerror("Error", f"Contenedor de consulta vacio")
+    
+    def heading_order(self, col):
+        
+        self.col_op = {
+            1: 'prod.nroProd',
+            2: 'prod.nombre',
+            3: 'prod.cantidad',
+            4: 'prod.precio',
+            5: 'lot.nroLotes'
+        }
+        
+        columna = self.col_op[col]
+        self.trv.delete(*self.trv.get_children())
+        try:
+            self.conexion = ConexionDB(self)
+            query = f"SELECT prod.nroProd, prod.nombre, prod.cantidad, prod.precio, lot.nroLotes, est.nombre_est FROM productos prod INNER JOIN lotes lot ON prod.lote_id = lot.ID_Lotes INNER JOIN estado est ON prod.est_id = est.ID_Estados ORDER BY {columna} ASC"
+            self.conexion.cursor.execute(query)
+            resultados = self.conexion.cursor.fetchall()
+
+            if resultados:
+                for registro in resultados:
+                    self.trv.insert('', 'end', values=registro)
+            else:
+                messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+        except pymysql.Error as e:
+                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
     
     def estado_seleccionado(self, event):
         select= self.combo_state.get()

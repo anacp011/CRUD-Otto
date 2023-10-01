@@ -33,9 +33,9 @@ class ProveedorApp:
         
         self.trv = ttk.Treeview(tree_frame,  columns=(1, 2, 3), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading(1, text="Nro Proveedor")
-        self.trv.heading(2, text="Nombre")
-        self.trv.heading(3, text="Contacto")
+        self.trv.heading('#1', text="ID Proveedor", command= lambda col=1: self.heading_order(col))
+        self.trv.heading('#2', text="Nombre", command= lambda col=2: self.heading_order(col))
+        self.trv.heading('#3', text="Contacto")
         self.trv.column('#1', anchor=tk.CENTER)
         self.trv.column('#2', anchor=tk.CENTER)
         self.trv.column('#3', anchor=tk.CENTER)
@@ -45,16 +45,23 @@ class ProveedorApp:
         self.trv.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side=tk.RIGHT, fill="y")
         
+        self.opciones_columnas = {
+            '  ID Proveedor': 'nroProvee',
+            '  Nombre': 'nombre'
+        }
+        
         ## Boton
         btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(0,50))
-        btn = tk.Button(frame1, text="Buscar", command=self.consulta,  width=6, font=("Cardana",9), bg="#dcdcdc")
+        btn = tk.Button(frame1, text="Buscar", command=self.buscar,  width=6, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(10,20))
 
         ## CONSULTA        
-        self.q = tk.StringVar()
-        ent = tk.Entry(frame1, textvariable=self.q, width=15, font=("Cardana",10))
-        ent.pack(side=tk.RIGHT, padx=20,ipady=1.5)
+        self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
+        self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        self.combo = ttk.Combobox(frame1, values=['', '  ID Proveedor', '  Nombre'], state='readonly', width=20, font=("Calibri",11))
+        self.combo.pack(side=tk.RIGHT)
+        self.combo.set("Seleccione una opción")
         
         btn = tk.Button(frame2, text="Agregar", width=8, font=("Cardana",9), bg="#dcdcdc", command=self.abrir_ventana_agregar)
         btn.pack(side=tk.LEFT, padx=250)
@@ -62,7 +69,7 @@ class ProveedorApp:
         btn.pack(side=tk.LEFT)
 
         self.actualizar()
-        
+    
     def abrir_ventana_agregar(self):
         if not self.top_open:
             self.top_open = True
@@ -78,36 +85,78 @@ class ProveedorApp:
     def top_close(self):
         self.top_open = False
     
-    def vista(self, rows):
-        self.trv.delete(*self.trv.get_children())
-        for i in rows:
-            self.trv.insert("", "end", values=i)
 
-    def actualizar(self):
-        try:
-            conexion = ConexionDB(self)  # Crea una instancia de la clase ConexionDB
-            conexion.actualizar_proveedor()
-        except pymysql.Error as e:
-            messagebox.showerror("Error", f"No se pudo actualizar la tabla de proveedors: {str(e)}")
-        finally:
-            conexion.close()
-            
-    def consulta(self):
-        conexion = ConexionDB(self) 
-        if self.q.get() == "":
-            messagebox.showerror("Error", f"Contenedor de consulta vacio")
-            conexion.close()
-        else: 
+    def buscar(self):
+        opcion = self.combo.get()
+        valor = self.entry.get()
+        self.trv.delete(*self.trv.get_children())  # Limpiar la Treeview
+       
+        if opcion in self.opciones_columnas:
+            columna = self.opciones_columnas[opcion]
             try:
-                q2 = self.q.get()
-                conexion.consulta_proveedor(q2)
+                self.conexion = ConexionDB(self)
+                query = f"SELECT nroProvee, nombre, contacto FROM proveedores WHERE {columna} = %s"
+                self.conexion.cursor.execute(query, (valor,))
+                resultados = self.conexion.cursor.fetchall()
+
+                if resultados:
+                    for registro in resultados:
+                        self.trv.insert('', 'end', values=registro)
+                else:
+                    messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
             except pymysql.Error as e:
-                messagebox.showerror("Error", f"No se pudo realizar la consulta de proveedors: {str(e)}")
+                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
             finally:
-                conexion.close()
+                if self.conexion:
+                    self.conexion.close()
+        else:
+            self.actualizar()
+            messagebox.showerror("Error", f"Contenedor de consulta vacio")
+
+    def heading_order(self, col):
+        
+        self.col_op = {
+            1: 'nroProvee',
+            2: 'nombre'
+        }
+        
+        columna = self.col_op[col]
+        self.trv.delete(*self.trv.get_children())
+        try:
+            self.conexion = ConexionDB(self)
+            query = f"SELECT nroProvee, nombre, contacto FROM proveedores ORDER BY {columna} ASC"
+            self.conexion.cursor.execute(query)
+            resultados = self.conexion.cursor.fetchall()
+
+            if resultados:
+                for registro in resultados:
+                    self.trv.insert('', 'end', values=registro)
+            else:
+                messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+        except pymysql.Error as e:
+                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
+    
+    def actualizar(self):
+        self.trv.delete(*self.trv.get_children())
+        try:
+            self.conexion = ConexionDB(self)
+            query = "SELECT nroProvee, nombre, contacto FROM proveedores"
+            self.conexion.cursor.execute(query)
+            rows = self.conexion.cursor.fetchall()
+            for i in rows:
+                self.trv.insert("", "end", values=i)
+        except pymysql.Error as e:
+            messagebox.showerror("Error", f"No se pudo obtener los datos: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
             
     def restablecer(self):
-        self.q.set("")
+        self.combo.set("Seleccione una opción")  # Restablece el Combobox a una cadena vacía
+        self.entry.delete(0, tk.END)  # Borra el contenido del Entry
         self.actualizar()
     
     def eliminar(self):

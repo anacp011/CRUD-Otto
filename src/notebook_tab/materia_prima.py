@@ -48,9 +48,9 @@ class MateriaPrimaApp:
         self.proveedor_id = tk.StringVar()
         
         self.opciones_columnas = {
-            '  Nro MateriaPrima': 'mp.nroMatPrim',
+            '  ID MateriaPrima': 'mp.nroMatPrim',
             '  Nombre': 'mp.nombre',
-            '  Nro Proveedor': 'pr.nroProvee'
+            '  ID Proveedor': 'pr.nroProvee'
         }
         
         ## Botón
@@ -62,7 +62,7 @@ class MateriaPrimaApp:
         ## Filtro
         self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  Nro MateriaPrima', '  Nombre', '  Nro Proveedor'], state='readonly', width=20, font=("Calibri",11))
+        self.combo = ttk.Combobox(frame1, values=['', '  ID MateriaPrima', '  Nombre', '  ID Proveedor'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
        
@@ -72,10 +72,10 @@ class MateriaPrimaApp:
        
         self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3, 4), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading('#1', text="Nro Materia Prima")
-        self.trv.heading('#2', text="Nombre")
-        self.trv.heading('#3', text="Cantidad")
-        self.trv.heading('#4', text="Nro Proveedor")
+        self.trv.heading('#1', text="ID Materia Prima", command= lambda col=1: self.heading_order(col))
+        self.trv.heading('#2', text="Nombre", command= lambda col=2: self.heading_order(col))
+        self.trv.heading('#3', text="Cantidad", command= lambda col=3: self.heading_order(col))
+        self.trv.heading('#4', text="ID Proveedor", command= lambda col=4: self.heading_order(col))
        
         self.trv.column('#1', anchor=tk.CENTER)
         self.trv.column('#2', anchor=tk.CENTER)
@@ -123,7 +123,7 @@ class MateriaPrimaApp:
     
     def top_close(self):
         self.top_open = False
-   
+    
     def buscar(self):
         opcion = self.combo.get()
         valor = self.entry.get()
@@ -150,6 +150,35 @@ class MateriaPrimaApp:
         else:
             self.actualizar()
             messagebox.showerror("Error", f"Contenedor de consulta vacio")
+    
+    def heading_order(self, col):
+        
+        self.col_op = {
+            1: 'mp.nroMatPrim',
+            2: 'mp.nombre',
+            3: 'mp.cantidad',
+            4: 'pr.nroProvee'
+        }
+        
+        columna = self.col_op[col]
+        self.trv.delete(*self.trv.get_children())
+        try:
+            self.conexion = ConexionDB(self)
+            query = f"SELECT mp.nroMatPrim, mp.nombre, mp.cantidad, pr.nroProvee FROM materias_primas mp INNER JOIN proveedores pr ON mp.proveedor_id = pr.ID_Provee ORDER BY {columna} ASC"
+            self.conexion.cursor.execute(query)
+            resultados = self.conexion.cursor.fetchall()
+
+            if resultados:
+                for registro in resultados:
+                    self.trv.insert('', 'end', values=registro)
+            else:
+                messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+        except pymysql.Error as e:
+                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
+    
     
     def actualizar(self):
         self.trv.delete(*self.trv.get_children())

@@ -31,9 +31,9 @@ class EnvaseApp:
         self.proveedor_id = tk.StringVar()
         
         self.opciones_columnas = {
-            '  Nro Envases': 'env.nroEnvases',
+            '  ID Envases': 'env.nroEnvases',
             '  Nombre': 'env.nombre',
-            '  Nro Proveedor': 'pr.nroProvee'
+            '  ID Proveedor': 'pr.nroProvee'
         }
         ## Botón
         btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc")
@@ -44,7 +44,7 @@ class EnvaseApp:
         ## Filtro
         self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  Nro Envases', '  Nombre', '  Nro Proveedor'], state='readonly', width=20, font=("Calibri",11))
+        self.combo = ttk.Combobox(frame1, values=['', '  ID Envases', '  Nombre', '  ID Proveedor'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
         
@@ -54,9 +54,9 @@ class EnvaseApp:
         
         self.trv = ttk.Treeview(tree_frame, columns=(1, 2, 3), show="headings", height="9")
         self.trv.pack(side=tk.LEFT, fill="both", expand=True)
-        self.trv.heading('#1', text="Nro Envase")
-        self.trv.heading('#2', text="Nombre")
-        self.trv.heading('#3', text="Nro Proveedor")
+        self.trv.heading('#1', text="ID Envase", command= lambda col=1: self.heading_order(col))
+        self.trv.heading('#2', text="Nombre", command= lambda col=2: self.heading_order(col))
+        self.trv.heading('#3', text="ID Proveedor", command= lambda col=3: self.heading_order(col))
         self.trv.column('#1', anchor=tk.CENTER)
         self.trv.column('#2', anchor=tk.CENTER)
         self.trv.column('#3', anchor=tk.CENTER)
@@ -115,14 +115,38 @@ class EnvaseApp:
             self.actualizar()
             messagebox.showerror("Búsqueda", f"Contenedor de consulta vacio")
             
+    def heading_order(self, col):
         
+        self.col_op = {
+            1: 'env.nroEnvases',
+            2: 'env.nombre',
+            3: 'pr.nroProvee'
+        }
+        
+        columna = self.col_op[col]
+        self.trv.delete(*self.trv.get_children())
+        try:
+            self.conexion = ConexionDB(self)
+            query = f"SELECT env.nroEnvases, env.nombre, pr.nroProvee FROM envases env INNER JOIN proveedores pr ON env.proveedor_id = pr.ID_Provee ORDER BY {columna} ASC"
+            self.conexion.cursor.execute(query)
+            resultados = self.conexion.cursor.fetchall()
+
+            if resultados:
+                for registro in resultados:
+                    self.trv.insert('', 'end', values=registro)
+            else:
+                messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+        except pymysql.Error as e:
+                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
+    
     def actualizar(self):
         self.trv.delete(*self.trv.get_children())
         try:
             self.conexion = ConexionDB(self)
-            query = """SELECT env.nroEnvases, env.nombre, pr.nroProvee
-                    FROM envases env
-                    INNER JOIN proveedores pr ON env.proveedor_id = pr.ID_Provee  """
+            query = "SELECT env.nroEnvases, env.nombre, pr.nroProvee FROM envases env INNER JOIN proveedores pr ON env.proveedor_id = pr.ID_Provee  "
             self.conexion.cursor.execute(query)
             rows = self.conexion.cursor.fetchall()
             for i in rows:
