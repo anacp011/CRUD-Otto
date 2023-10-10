@@ -22,6 +22,8 @@ class ProveedorApp:
         frame2.pack(fill="both", expand="yes", padx=20, pady=10)
         frame2['relief'] = 'flat'
         pestana_proveedores.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame2.bind('<Double-Button-1>', self.deseleccionar_fila)
         
         self.NumeroProvee = tk.StringVar()
         self.nombre = tk.StringVar() 

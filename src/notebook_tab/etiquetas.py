@@ -24,6 +24,8 @@ class EtiquetaApp:
         frame2.pack(fill="both", expand="yes", padx=20, pady=20)
         frame2['relief'] = 'flat'
         pestana_Etiquetas.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame2.bind('<Double-Button-1>', self.deseleccionar_fila)
     
         #   Variables
         self.numEtiquetas = tk.StringVar()

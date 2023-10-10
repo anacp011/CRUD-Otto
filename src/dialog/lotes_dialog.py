@@ -12,21 +12,22 @@ class LoteDialog:
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent.parent)
         self.dialog.title("Agregar/Editar lotes")
-        self.dialog.geometry("340x350")
+        self.dialog.geometry("340x290")
+        self.dialog.configure(bg="#A5A5A5")
 
-        frame = tk.Frame(self.dialog)
-        frame.pack(pady=50)
+        frame = tk.Frame(self.dialog, background="#A5A5A5")
+        frame.pack(pady=(30,0))
 
-        tk.Label(frame, text="Nro Lotes:").grid(row=0, column=0, sticky=tk.NS, pady=(10,0))
+        tk.Label(frame, text="Nro Lotes:", background="#A5A5A5", font=("Helvetica", 10)).grid(row=0, column=0, sticky=tk.NS, pady=(10,0))
         self.NumLotes = tk.Entry(frame, width=15)
         self.NumLotes.grid(row=0, column=1, sticky=tk.W, pady=(10,0))
         
-        tk.Label(frame, text="Cantidad:").grid(row=1, column=0, sticky=tk.NS, pady=(20,0))
+        tk.Label(frame, text="Cantidad:", background="#A5A5A5", font=("Helvetica", 10)).grid(row=1, column=0, sticky=tk.NS, pady=(20,0))
         self.cantidad = tk.Entry(frame, width=15)
         self.cantidad.grid(row=1, column=1, sticky=tk.W, pady=(20,0))
         
-        tk.Label(frame, text="Fecha de inicio:").grid(row=2, column=0, sticky=tk.NS, pady=(30,0))
-        tk.Label(frame, text="Fecha de Fin:").grid(row=2, column=1, sticky=tk.NS, pady=(30,0))
+        tk.Label(frame, text="Fecha de inicio:", background="#A5A5A5", font=("Helvetica", 10)).grid(row=2, column=0, sticky=tk.NS, pady=(30,0))
+        tk.Label(frame, text="Fecha de Fin:", background="#A5A5A5", font=("Helvetica", 10)).grid(row=2, column=1, sticky=tk.NS, pady=(30,0))
          
         self.fecha_inicio = DateEntry(frame,date_pattern='yyyy-mm-dd')
         self.fecha_fin = DateEntry(frame, date_pattern='yyyy-mm-dd')
@@ -48,11 +49,11 @@ class LoteDialog:
             self.fecha_fin.delete(0, tk.END)
             self.fecha_fin.insert(tk.END, self.values[3])
         
-            tk.Button(frame, text="Actualizar", command=self.modificar_datos).grid(row=4, column=0, sticky=tk.E, padx=15,pady=(50,0))
+            tk.Button(frame, text="Actualizar", command=self.modificar_datos, font=("Helvetica", 9)).grid(row=4, column=0, sticky=tk.E, padx=15,pady=(50,0))
         else:
-            tk.Button(frame, text="Agregar", command=self.guardar_datos).grid(row=4, column=0, sticky=tk.E, padx=15, pady=(50,0))
+            tk.Button(frame, text="Agregar", command=self.guardar_datos, font=("Helvetica", 9)).grid(row=4, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
-        tk.Button(frame, text="Cancelar", command=self.on_close).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
+        tk.Button(frame, text="Cancelar", command=self.on_close, font=("Helvetica", 9)).grid(row=4, column=1, sticky=tk.W, padx=15, pady=(50,0))
     
         self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
         

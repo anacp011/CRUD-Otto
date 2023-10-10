@@ -40,6 +40,7 @@ class MateriaPrimaApp:
         frame2['relief'] = 'flat'
         pestana_MatPrim.bind('<Double-Button-1>', self.deseleccionar_fila)
         frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame2.bind('<Double-Button-1>', self.deseleccionar_fila)
         
         #   Variables
         self.NumMatPrim = tk.StringVar()
@@ -184,7 +185,7 @@ class MateriaPrimaApp:
         self.trv.delete(*self.trv.get_children())
         try:
             self.conexion = ConexionDB(self)
-            query = "SELECT mp.nroMatPrim, mp.nombre, mp.cantidad, pr.nroProvee FROM materias_primas mp INNER JOIN proveedores pr ON mp.proveedor_id = pr.ID_Provee "
+            query = "SELECT mp.nroMatPrim, mp.nombre, mp.cantidad, pr.nroProvee FROM materias_primas mp INNER JOIN proveedores pr ON mp.proveedor_id = pr.ID_Provee ORDER BY  mp.ID_MatPrim ASC "
             self.conexion.cursor.execute(query)
             rows = self.conexion.cursor.fetchall()
             for i in rows:

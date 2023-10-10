@@ -11,19 +11,20 @@ class ProveedorDialog:
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent.parent)
         self.dialog.title("Agregar/Editar Proveedor")
-        self.dialog.geometry("350x300")
+        self.dialog.geometry("340x270")
+        self.dialog.configure(bg="#A5A5A5")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
         
-        tk.Label(self.dialog, text="Nro Proveedor").grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
+        tk.Label(self.dialog, text="Nro Proveedor", background="#A5A5A5", font=("Helvetica", 10)).grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
         self.NumProvee = tk.Entry(self.dialog, width=15)
         self.NumProvee.grid(row=0, column=1, sticky=tk.W, pady=(60,0))
         
-        tk.Label(self.dialog, text="Nombre:").grid(row=1, column=0, sticky=tk.NS, pady=(20,0))
+        tk.Label(self.dialog, text="Nombre:", background="#A5A5A5", font=("Helvetica", 10)).grid(row=1, column=0, sticky=tk.NS, pady=(20,0))
         self.nombre = tk.Entry(self.dialog, width=15)
         self.nombre.grid(row=1, column=1, sticky=tk.W, pady=(20,0))
         
-        tk.Label(self.dialog, text="Contacto:").grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
+        tk.Label(self.dialog, text="Contacto:", background="#A5A5A5", font=("Helvetica", 10)).grid(row=2, column=0, sticky=tk.NS, pady=(20,0))
         self.contacto = tk.Entry(self.dialog, width=20)
         self.contacto.grid(row=2, column=1, sticky=tk.W, pady=(20,0))
         
@@ -33,11 +34,11 @@ class ProveedorDialog:
             self.nombre.insert(tk.END, self.values[1])
             self.contacto.insert(tk.END, self.values[2])
 
-            tk.Button(self.dialog, text="Actualizar", command=self.modificar_datos).grid(row=3, column=0, sticky=tk.E, padx=15,pady=(50,0))
+            tk.Button(self.dialog, text="Actualizar", command=self.modificar_datos, font=("Helvetica", 9)).grid(row=3, column=0, sticky=tk.E, padx=15,pady=(50,0))
         else:
-            tk.Button(self.dialog, text="Agregar", command=self.guardar_datos).grid(row=3, column=0, sticky=tk.E, padx=15, pady=(50,0))
+            tk.Button(self.dialog, text="Agregar", command=self.guardar_datos, font=("Helvetica", 9)).grid(row=3, column=0, sticky=tk.E, padx=15, pady=(50,0))
 
-        tk.Button(self.dialog, text="Cancelar", command=self.on_close).grid(row=3, column=1, sticky=tk.W, padx=15, pady=(50,0))
+        tk.Button(self.dialog, text="Cancelar", command=self.on_close, font=("Helvetica", 9)).grid(row=3, column=1, sticky=tk.W, padx=15, pady=(50,0))
         
         self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
         

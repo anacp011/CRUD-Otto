@@ -24,6 +24,8 @@ class EnvaseApp:
         frame2.pack(fill="both", expand="yes", padx=20, pady=20)
         frame2['relief'] = 'flat'
         pestana_Envases.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame2.bind('<Double-Button-1>', self.deseleccionar_fila)
     
         #   Variables
         self.numEnvases = tk.StringVar()

@@ -23,6 +23,7 @@ class ProductoApp:
         frame2['relief'] = 'flat'
         pestana_productos.bind('<Double-Button-1>', self.deseleccionar_fila)
         frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame2.bind('<Double-Button-1>', self.deseleccionar_fila)
         
         #   Variables
         self.NumeroProd = tk.StringVar()

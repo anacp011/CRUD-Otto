@@ -16,12 +16,14 @@ class LoteApp:
 
         #Contenedores
         frame1 = tk.LabelFrame(pestana_lotes)
-        frame1.pack(fill="both", expand="yes", pady=(40,0))
+        frame1.pack(fill="both", expand="yes", pady=(25,0))
         frame1['relief'] = 'flat'
         frame2 = tk.LabelFrame(pestana_lotes)
         frame2.pack(fill="both", expand="yes", padx=20, pady=10)
         frame2['relief'] = 'flat'
         pestana_lotes.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
+        frame2.bind('<Double-Button-1>', self.deseleccionar_fila)
         
          ## Variables
         self.nroLotes = tk.StringVar()
@@ -31,7 +33,6 @@ class LoteApp:
         
         self.opciones_columnas = {
             '  ID Lote': 'nroLotes',
-            '  Cantidad': 'cantidad',
             '  Fecha Inicio': 'fecha_inicio',
             '  Fecha Fin': 'fecha_fin'
         }
@@ -45,7 +46,7 @@ class LoteApp:
         ## CONSULTA
         self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
         self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  ID Lote', '  Cantidad', '  Fecha Inicio', '  Fecha Fin'], state='readonly', width=20, font=("Calibri",11))
+        self.combo = ttk.Combobox(frame1, values=['', '  ID Lote', '  Fecha Inicio', '  Fecha Fin'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
         
