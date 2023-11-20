@@ -69,9 +69,9 @@ class EtiquetaApp:
         self.trv.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side=tk.RIGHT, fill="y")
         
-        btn = tk.Button(frame2, text="Agregar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.abrir_ventana_agregar)
+        btn = tk.Button(frame2, text="Agregar", width=8, font=("Cardana",9), bg="#dcdcdc", command=self.abrir_ventana_agregar)
         btn.pack(side=tk.LEFT, padx=250)
-        btn = tk.Button(frame2, text="Eliminar", width=10, font=("Cardana",9), bg="#dcdcdc", command=self.eliminar)
+        btn = tk.Button(frame2, text="Eliminar", width=8, font=("Cardana",9), bg="#dcdcdc", command=self.eliminar)
         btn.pack(side=tk.LEFT)
         
         self.actualizar()
@@ -108,7 +108,7 @@ class EtiquetaApp:
                     for registro in resultados:
                         self.trv.insert('', 'end', values=registro)
                 else:
-                    messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+                    messagebox.showerror("Error", "No existen resultados para la búsqueda.")
             except pymysql.Error as e:
                 messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
             finally:

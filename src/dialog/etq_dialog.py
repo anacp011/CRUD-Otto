@@ -10,8 +10,10 @@ class EtiquetaDialog:
         self.parent_etq = parent_etq
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent.parent)
+        self.dialog.attributes('-topmost', True)
         self.dialog.title("Agregar/Editar Etiquetas")
         self.dialog.geometry("350x265")
+        self.dialog.resizable(False, False)
         self.dialog.configure(bg="#A5A5A5")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
@@ -72,13 +74,20 @@ class EtiquetaDialog:
             return result
     
     def new_id(self):
-        conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT COUNT(*) FROM etiquetas WHERE nroEtiquetas=%s", (self.NumEtiquetas.get(),))
-        count = cursor.fetchone()[0]
-        conexion.close()
-        if count > 0:
+        Netq = self.NumEtiquetas.get() 
+        Netq = int(Netq)
+        if Netq <= 0 :
+            self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado.")) # Muestra el messagebox de error de manera asincrónica
             return True
+        else:
+            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT COUNT(*) FROM etiquetas WHERE nroEtiquetas=%s", (self.NumEtiquetas.get(),))
+            count = cursor.fetchone()[0]
+            conexion.close()
+            if count > 0:
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de etiqueta ya existe actualmente."))
+                return True
             
     def guardar_datos(self):
         if self.NumEtiquetas.get() == "" or self.nombre.get() == "":
@@ -91,7 +100,6 @@ class EtiquetaDialog:
             cursor = conexion.cursor()
             
             if self.new_id():
-                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de etiqueta ya existe actualmente."))
                 return
             else:
                 cursor.execute("INSERT INTO etiquetas (nroEtiquetas, nombre, proveedor_id) VALUES (%s, %s, %s)", (
@@ -121,7 +129,6 @@ class EtiquetaDialog:
             cursor = conexion.cursor()
             if self.values[0] != self.NumEtiquetas.get():
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de etiqueta ya existe actualmente."))
                     return
                 
             cursor.execute("UPDATE etiquetas SET nroEtiquetas=%s, nombre=%s, proveedor_id=%s WHERE ID_Etiquetas=%s", (

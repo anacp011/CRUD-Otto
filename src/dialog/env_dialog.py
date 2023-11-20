@@ -10,8 +10,10 @@ class EnvaseDialog:
         self.parent_env = parent_env
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent.parent)
+        self.dialog.attributes('-topmost', True)
         self.dialog.title("Agregar/Editar Envases")
         self.dialog.geometry("300x265")
+        self.dialog.resizable(False, False)
         self.dialog.configure(bg="#A5A5A5")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
@@ -73,12 +75,19 @@ class EnvaseDialog:
             return result
     
     def new_id(self):
-        conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT COUNT(*) FROM envases WHERE nroEnvases=%s", (self.NumEnvases.get(),))
-        count = cursor.fetchone()[0]
-        if count > 0:
+        Nenv = self.NumEnvases.get() 
+        Nenv = int(Nenv)
+        if Nenv <= 0 :
+            self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado.")) # Muestra el messagebox de error de manera asincrónica
             return True
+        else:
+            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT COUNT(*) FROM envases WHERE nroEnvases=%s", (self.NumEnvases.get(),))
+            count = cursor.fetchone()[0]
+            if count > 0:
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de envase ya existe actualmente."))
+                return True
             
     def guardar_datos(self):
         if self.NumEnvases.get() == "" or self.nombre.get() == "":
@@ -91,7 +100,6 @@ class EnvaseDialog:
             cursor = conexion.cursor()
 
             if self.new_id():
-                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de envase ya existe actualmente."))
                 return
             else:
                 cursor.execute("INSERT INTO envases (nroEnvases, nombre, proveedor_id) VALUES (%s, %s, %s)", (
@@ -122,7 +130,6 @@ class EnvaseDialog:
             
             if self.values[0] != self.NumEnvases.get():
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de envase ya existe actualmente."))
                     return
             
             cursor.execute("UPDATE envases SET nroEnvases=%s, nombre=%s, proveedor_id=%s WHERE ID_Envases=%s", (

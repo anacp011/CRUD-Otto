@@ -148,7 +148,7 @@ class ProductoApp:
                     for registro in resultados:
                         self.trv.insert('', 'end', values=registro)
                 else:
-                    messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+                    messagebox.showerror("Error", "No existen resultados para la búsqueda.")
             except pymysql.Error as e:
                 messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
             finally:

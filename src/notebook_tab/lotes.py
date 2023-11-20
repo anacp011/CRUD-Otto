@@ -4,6 +4,7 @@ import pymysql
 from consultas_sql import ConexionDB
 from tkinter import messagebox
 from dialog.lotes_dialog import LoteDialog
+from tkcalendar import DateEntry
 
 class LoteApp:
     def __init__(self, parent, cuaderno1):
@@ -15,14 +16,14 @@ class LoteApp:
         self.top_open = False
 
         #Contenedores
-        frame1 = tk.LabelFrame(pestana_lotes)
-        frame1.pack(fill="both", expand="yes", pady=(25,0))
-        frame1['relief'] = 'flat'
+        self.frame1 = tk.LabelFrame(pestana_lotes)
+        self.frame1.pack(fill="both", expand="yes", pady=(25,0))
+        self.frame1['relief'] = 'flat'
         frame2 = tk.LabelFrame(pestana_lotes)
         frame2.pack(fill="both", expand="yes", padx=20, pady=10)
         frame2['relief'] = 'flat'
         pestana_lotes.bind('<Double-Button-1>', self.deseleccionar_fila)
-        frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
+        self.frame1.bind('<Double-Button-1>', self.deseleccionar_fila)
         frame2.bind('<Double-Button-1>', self.deseleccionar_fila)
         
          ## Variables
@@ -38,17 +39,66 @@ class LoteApp:
         }
         
         # Botón
-        btn = tk.Button(frame1, text="Restablecer", command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc")
+        btn = tk.Button(self.frame1, text="Restablecer", command=self.restablecer, width=10, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(0,50))
-        btn = tk.Button(frame1, text="Buscar", command=self.buscar, width=6, font=("Cardana",9), bg="#dcdcdc")
+        btn = tk.Button(self.frame1, text="Buscar", command=self.buscar, width=6, font=("Cardana",9), bg="#dcdcdc")
         btn.pack(side=tk.RIGHT, padx=(10,20))
         
+        
+        #self.combo = ttk.Combobox(self.frame1, values=['', '  ID Lote', '  Fecha Inicio', '  Fecha Fin'], state='readonly', width=20, font=("Calibri",11))
+        #self.combo.pack(side=tk.RIGHT)
+        #self.combo.set("Seleccione una opción")
+        
+        
+        # ComboBox para la selección
+        
+        self.combo = ttk.Combobox(self.frame1, values=['', '  ID Lote', '  Fecha'], state='readonly', width=20, font=("Calibri", 11))
+        self.combo.pack(side=tk.LEFT, padx=(400,0))
+        self.entry = tk.Entry(self.frame1, width=15, font=("Cardana", 10))
+        self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=50)
+        self.combo.set("Seleccione una opción")
+        self.combo.bind("<<ComboboxSelected>>", self.on_combo_select)  # Enlaza el evento
+        
+
+        # Variables para DateEntry
+        self.fecha_inicio_dateentry = None
+        self.fecha_fin_dateentry = None
+        #self.fecha_dateentry = None
+        
+        """
+        self.c = 0
+        
         ## CONSULTA
-        self.entry = tk.Entry(frame1, width=15, font=("Cardana",10))
-        self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        self.combo = ttk.Combobox(frame1, values=['', '  ID Lote', '  Fecha Inicio', '  Fecha Fin'], state='readonly', width=20, font=("Calibri",11))
+        if (self.c==1):
+            self.fecha_inicio = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
+            self.fecha_inicio.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        else:
+            self.entry = tk.Entry(self.frame1, width=15, font=("Cardana",10))
+            self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+            
+        self.combo = ttk.Combobox(self.frame1, values=['', '  ID Lote', '  Fecha Inicio', '  Fecha Fin'], state='readonly', width=20, font=("Calibri",11))
         self.combo.pack(side=tk.RIGHT)
         self.combo.set("Seleccione una opción")
+        
+        
+        ## Opción 1
+        selection = self.combo.current()
+        
+        if (selection==1):
+            self.c==1
+        
+        ## Opción 2
+        selection = self.combo.get()
+        
+        if (selection=="  Fecha Inicio"):
+            self.fecha_inicio = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
+            self.fecha_inicio.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        if (selection=="  Fecha Fin"):    
+            self.fecha_fin = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
+            self.fecha_fin.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        else:
+            self.entry = tk.Entry(self.frame1, width=15, font=("Cardana",10))
+            self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)"""
         
         ## Tablas
         tree_frame = tk.Frame(frame2)
@@ -76,7 +126,57 @@ class LoteApp:
         btn.pack(side=tk.LEFT)
         
         self.actualizar()
+    
+    """
+    def on_combo_select(self, event):
+        selection = self.combo.get()
+        
+        if self.fecha_inicio_dateentry:
+            self.fecha_inicio_dateentry.destroy()
+        if self.fecha_fin_dateentry:
+            self.fecha_fin_dateentry.destroy()
+        if self.entry:
+            self.entry.destroy()
+                
+        if selection == "  Fecha Inicio":
+            self.fecha_inicio_dateentry = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
+            self.fecha_inicio_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        elif selection == "  Fecha Fin":
+            self.fecha_fin_dateentry = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
+            self.fecha_fin_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+        else:
+            self.entry = tk.Entry(self.frame1, width=15, font=("Cardana", 10))
+            self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
+    """
+    
+    def on_combo_select(self, event):
+        selection = self.combo.get()
+        
+        if self.fecha_inicio_dateentry or self.fecha_fin_dateentry:
+            self.fecha_inicio_dateentry.destroy()
+            self.fecha_fin_dateentry.destroy()
+            #self.combo.destroy()
+        if self.entry:
+            self.entry.destroy()
+                
+        if selection == "  Fecha":
             
+            self.fecha_fin_dateentry = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
+            self.fecha_fin_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=(0,20))
+            
+            self.fecha_inicio_dateentry = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
+            self.fecha_inicio_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=(0,20))
+
+            self.combo.pack(side=tk.LEFT, padx=(330,0))
+        
+        else:
+            
+            self.entry = tk.Entry(self.frame1, width=15, font=("Cardana", 10))
+            self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=50)
+            
+            self.combo.pack(side=tk.LEFT, padx=(400,0))
+        
+    
     def abrir_ventana_agregar(self):
         if not self.top_open:
             self.top_open = True
@@ -99,30 +199,34 @@ class LoteApp:
     
     def buscar(self):
         opcion = self.combo.get()
-        valor = self.entry.get()
+        
         self.trv.delete(*self.trv.get_children())  # Limpiar la Treeview
-       
-        if opcion in self.opciones_columnas:
-            columna = self.opciones_columnas[opcion]
-            try:
-                self.conexion = ConexionDB(self)
-                query = f"SELECT nroLotes, cantidad, fecha_inicio, fecha_fin FROM Lotes WHERE {columna} = %s"
+        
+        try:
+            self.conexion = ConexionDB(self)
+            if opcion == "  Fecha":
+                valor_f_inicio = self.fecha_inicio_dateentry.get_date()
+                valor_f_fin = self.fecha_fin_dateentry.get_date()
+                query = f"SELECT nroLotes, cantidad, fecha_inicio, fecha_fin FROM Lotes WHERE lotes.fecha_inicio >= %s AND lotes.fecha_fin <= %s"
+                self.conexion.cursor.execute(query, (valor_f_inicio, valor_f_fin))
+            else:
+                valor = self.entry.get()
+                query = f"SELECT nroLotes, cantidad, fecha_inicio, fecha_fin FROM Lotes WHERE lotes.nroLotes = %s"
                 self.conexion.cursor.execute(query, (valor,))
-                resultados = self.conexion.cursor.fetchall()
+            
+            resultados = self.conexion.cursor.fetchall()
 
-                if resultados:
-                    for registro in resultados:
-                        self.trv.insert('', 'end', values=registro)
-                else:
-                    messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
-            except pymysql.Error as e:
-                messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
-            finally:
-                if self.conexion:
-                    self.conexion.close()
-        else:
-            self.actualizar()
-            messagebox.showerror("Error", f"Contenedor de consulta vacio")
+            if resultados:
+                for registro in resultados:
+                    self.trv.insert('', 'end', values=registro)
+            else:
+                messagebox.showerror("Error", "No existen resultados para la búsqueda.")
+        except pymysql.Error as e:
+            messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
+        finally:
+            if self.conexion:
+                self.conexion.close()
+
     
     def heading_order(self, col):
         
@@ -166,11 +270,25 @@ class LoteApp:
         finally:
             if self.conexion:
                 self.conexion.close()
-            
+
     def restablecer(self):
         self.combo.set("Seleccione una opción")  # Restablece el Combobox a una cadena vacía
-        self.entry.delete(0, tk.END)  # Borra el contenido del Entry
         self.actualizar()
+        
+        opcion_sel = self.combo.get()
+        
+        if self.fecha_inicio_dateentry and self.fecha_fin_dateentry :
+        #if opcion_sel == "  Fecha" :
+            self.fecha_inicio_dateentry.destroy()
+            self.fecha_fin_dateentry.destroy()
+            
+            self.entry = tk.Entry(self.frame1, width=15, font=("Cardana", 10))
+            self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=50)
+        
+        elif self.entry :
+        #elif opcion_sel == "  ID Lote" :
+            self.entry.delete(0, tk.END)  # Borra el contenido del Entry
+        
     
     def eliminar(self):
         selected_item = self.trv.focus()

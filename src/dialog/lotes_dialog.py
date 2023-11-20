@@ -11,8 +11,10 @@ class LoteDialog:
         self.parent_lot = parent_lot
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent.parent)
+        self.dialog.attributes('-topmost', True)
         self.dialog.title("Agregar/Editar lotes")
         self.dialog.geometry("340x290")
+        self.dialog.resizable(False, False)
         self.dialog.configure(bg="#A5A5A5")
 
         frame = tk.Frame(self.dialog, background="#A5A5A5")
@@ -57,6 +59,17 @@ class LoteDialog:
     
         self.dialog.protocol("WM_DELETE_WINDOW", self.on_close)
         
+    def verif_cantidad(self): # Funcion para verficar el ingreso correcto de cantidad
+        cantidad = self.cantidad.get()
+        try:
+            cantidad = int(cantidad)
+            if cantidad < 0:
+                return None # Error cuando aparece None
+            else:
+                return cantidad
+        except ValueError:
+            return None  # Error cuando aparece None
+        
     def on_close(self):
         self.dialog.destroy()
         self.parent_lot.top_close()
@@ -72,12 +85,19 @@ class LoteDialog:
             return result
     
     def new_id(self):
-        conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT COUNT(*) FROM lotes WHERE nroLotes=%s", (self.NumLotes.get(),))
-        count = cursor.fetchone()[0]
-        if count > 0:
+        Nlot = self.NumLotes.get() 
+        Nlot = int(Nlot)
+        if Nlot <= 0 :
+            self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado.")) # Muestra el messagebox de error de manera asincrónica
             return True
+        else:
+            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT COUNT(*) FROM lotes WHERE nroLotes=%s", (self.NumLotes.get(),))
+            count = cursor.fetchone()[0]
+            if count > 0:
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de lote ya existe actualmente."))
+                return True
         
     def guardar_datos(self):
         if self.NumLotes.get() == "" or self.fecha_inicio.get() == "" or self.fecha_fin.get() == "":
@@ -95,15 +115,18 @@ class LoteDialog:
             fecha_mysql_inicio = fecha_sel_inicio.strftime('%Y-%m-%d')
             fecha_mysql_fin = fecha_sel_fin.strftime('%Y-%m-%d')
             
+            if not self.verif_cantidad():
+                self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado."))  
+                return
+            
             conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
             cursor = conexion.cursor()
             if self.new_id():
-                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de lote ya existe actualmente."))
                 return
             else:
                 cursor.execute("INSERT INTO lotes (nroLotes, cantidad, fecha_inicio, fecha_fin) VALUES (%s, %s, %s, %s)", (
                     self.NumLotes.get(),
-                    self.cantidad.get(),
+                    self.verif_cantidad(),
                     fecha_mysql_inicio,
                     fecha_mysql_fin,
                 ))
@@ -138,14 +161,18 @@ class LoteDialog:
             
             conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
             cursor = conexion.cursor()
+            
+            if not self.verif_cantidad():
+                self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado."))  
+                return
+            
             if self.values[0] != self.NumLotes.get():
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de lote ya existe actualmente."))
                     return
                 
             cursor.execute("UPDATE lotes SET nroLotes=%s, cantidad=%s,  fecha_inicio=%s,  fecha_fin=%s WHERE ID_Lotes=%s", (
                 self.NumLotes.get(),
-                self.cantidad.get(),
+                self.verif_cantidad(),
                 fecha_mysql_inicio,
                 fecha_mysql_fin,
                 self.verify_id_LOT(),

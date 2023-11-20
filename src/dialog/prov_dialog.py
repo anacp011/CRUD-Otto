@@ -10,8 +10,10 @@ class ProveedorDialog:
         self.parent_prov = parent_prov
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent.parent)
+        self.dialog.attributes('-topmost', True)
         self.dialog.title("Agregar/Editar Proveedor")
         self.dialog.geometry("340x270")
+        self.dialog.resizable(False, False)
         self.dialog.configure(bg="#A5A5A5")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
@@ -57,12 +59,19 @@ class ProveedorDialog:
             return result
     
     def new_id(self):
-        conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT COUNT(*) FROM proveedores WHERE nroProvee=%s", (self.NumProvee.get(),))
-        count = cursor.fetchone()[0]
-        if count > 0:
+        Nprov = self.NumProvee.get() 
+        Nprov = int(Nprov)
+        if Nprov <= 0 :
+            self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado.")) # Muestra el messagebox de error de manera asincrónica
             return True
+        else:
+            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT COUNT(*) FROM proveedores WHERE nroProvee=%s", (self.NumProvee.get(),))
+            count = cursor.fetchone()[0]
+            if count > 0:
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de proveedor ya existe actualmente."))
+                return True
     
     def guardar_datos(self):
         if self.NumProvee.get() == "" or self.nombre.get() == "":
@@ -72,7 +81,6 @@ class ProveedorDialog:
             cursor = conexion.cursor()
             
             if self.new_id():
-                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de proveedor ya existe actualmente."))
                 return
             else:
                 cursor.execute("INSERT INTO proveedores (nroProvee, nombre, contacto) VALUES (%s, %s, %s)", (
@@ -101,7 +109,6 @@ class ProveedorDialog:
             
             if self.values[0] != self.NumProvee.get():
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de proveedor ya existe actualmente."))
                     return
                     
             cursor.execute("UPDATE proveedores SET nroProvee=%s, nombre=%s, contacto=%s WHERE ID_Provee=%s", (

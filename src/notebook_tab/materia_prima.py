@@ -30,7 +30,6 @@ class MateriaPrimaApp:
         self.abrir_pestana_etiqueta()
         self.abrir_pestana_lote()
         
-        
         ## Contenedores
         frame1 = tk.LabelFrame(pestana_MatPrim)
         frame1.pack(fill="both", expand="yes", ipady=10, padx=20,pady=20)
@@ -142,7 +141,7 @@ class MateriaPrimaApp:
                     for registro in resultados:
                         self.trv.insert('', 'end', values=registro)
                 else:
-                    messagebox.showerror("Error", "No se encontraron resultados para la búsqueda.")
+                    messagebox.showerror("Error", "No existen resultados para la búsqueda.")
             except pymysql.Error as e:
                 messagebox.showerror("Error", f"No se pudo realizar la búsqueda: {str(e)}")
             finally:

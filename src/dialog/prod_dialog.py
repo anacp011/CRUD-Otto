@@ -10,8 +10,10 @@ class ProdDialog:
         self.parent_prod = parent_prod
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent.parent)
+        self.dialog.attributes('-topmost', True)
         self.dialog.title("Agregar/Editar Productos")
         self.dialog.geometry("350x420")
+        self.dialog.resizable(False, False)
         self.dialog.configure(bg="#A5A5A5")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
@@ -88,7 +90,28 @@ class ProdDialog:
         for row in self.cursor.fetchall():
             data.append(f"{row[0]} - {row[1]}") 
         return data
-      
+    
+    def verif_cantidad(self): # Funcion para verficar el ingreso correcto de cantidad
+        cantidad = self.cantidad.get()
+        try:
+            cantidad = int(cantidad)
+            if cantidad < 0 :
+                return None # Error cuando aparece None
+            else:
+                return cantidad
+        except ValueError:
+            return None  # Error cuando aparece None
+    
+    def verif_precio(self): # Funcion para verficar el ingreso correcto de precio
+        precio = self.precio.get()
+        try:
+            precio = int(precio)
+            if precio < 0 or precio == 0:
+                return None # Error cuando aparece None
+            else:
+                return precio
+        except ValueError:
+            return None  # Error cuando aparece None
     
     def verify_id_PROD(self):
         numeroProd = self.values[0]
@@ -100,12 +123,19 @@ class ProdDialog:
             return result
         
     def new_id(self):
-        conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT COUNT(*) FROM productos WHERE nroProd=%s", (self.NumeroProd.get(),))
-        count = cursor.fetchone()[0]
-        if count > 0:
+        Nprod = self.NumeroProd.get() 
+        Nprod = int(Nprod)
+        if Nprod <= 0 :
+            self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado.")) # Muestra el messagebox de error de manera asincrónica
             return True
+        else:
+            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT COUNT(*) FROM productos WHERE nroProd=%s", (self.NumeroProd.get(),))
+            count = cursor.fetchone()[0]
+            if count > 0:
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente.")) # Muestra el messagebox de error de manera asincrónica
+                return True
         
     def guardar_datos(self):
         if self.NumeroProd.get() == "" or self.nombre.get() == "" or self.loteNum.get() == "" or self.estado.get() == "":
@@ -118,14 +148,16 @@ class ProdDialog:
             conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
             cursor = conexion.cursor()
             
+            #if not self.verif_cantidad() or not self.verif_precio():
+            #    self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado."))  
+            #    return
+            
             if self.new_id(): # verifica si ya existe el NroProd
-                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente.")) # Muestra el messagebox de error de manera asincrónica
                 return  # No sigue con la ejecución
             else:
                 cursor.execute("INSERT INTO productos (nroProd, nombre, cantidad, precio, lote_id, est_id) VALUES (%s, %s, %s, %s, %s, %s)", (
                     self.NumeroProd.get(),
                     self.nombre.get(),
-                    self.cantidad.get(),
                     self.precio.get(),
                     codigo_lote,
                     id_est,
@@ -162,17 +194,19 @@ class ProdDialog:
             # Verifica si el número de Producto fue modificado
             if self.values[0] !=  self.NumeroProd.get():
                 if self.new_id(): # Verifica si ya existe el NroProd
-                    # Muestra el messagebox de error de manera asincrónica
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente."))
                     return  # No sigue con la ejecución
 
+            #if not self.verif_cantidad() or not self.verif_precio():
+            #    self.dialog.after(0, lambda: messagebox.showerror("Error", "El formato de entrada debe ser un número apropiado."))  
+            #    return
+            
             conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
             cursor = conexion.cursor()
 
             cursor.execute("UPDATE productos SET nroProd=%s, nombre=%s, cantidad=%s, precio=%s, lote_id=%s, est_id=%s WHERE ID_Prod=%s", (
                 self.NumeroProd.get(),
                 self.nombre.get(),
-                self.cantidad.get(),
+                self.verif_cantidad(),
                 self.precio.get(),
                 codigo_lote,
                 id_estado,  # El valor seleccionado del combobox de estado

@@ -11,8 +11,10 @@ class MatPrimDialog:
         self.parent_matprim = parent_matprim
         self.callback = callback
         self.dialog = tk.Toplevel(self.parent)
+        self.dialog.attributes('-topmost', True)
         self.dialog.title("Agregar/Editar Materias Primas")
         self.dialog.geometry("350x300")
+        self.dialog.resizable(False, False)
         self.dialog.configure(bg="#A5A5A5")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
@@ -22,6 +24,7 @@ class MatPrimDialog:
         
         
         self.cantidad_var = tk.StringVar()
+        self.cantidad = tk.IntVar()
         
         tk.Label(self.dialog, text="Nro Materia Prima:", background="#A5A5A5", font=("Helvetica", 10)).grid(row=0, column=0, sticky=tk.NS, pady=(50,0))
         self.NumMatPrim = tk.Entry(self.dialog, width=15)
@@ -110,10 +113,17 @@ class MatPrimDialog:
             
     def split_cantidad(self):
         cantidad = self.cantidad.get()
-        unidad = self.combo_Unidad.get()
-        
-        cant_uni = cantidad + unidad
-        return cant_uni
+        try:
+            cantidad = int(cantidad)
+            if cantidad < 0:
+                return None
+            else:
+                unidad = self.combo_Unidad.get()
+                cant_uni = str(cantidad) + unidad  # Convertir nuevamente a cadena para concatenar
+                return cant_uni
+        except ValueError:
+            return None  # Puedes devolver None u otro valor que indique un error
+
     
     def combo_input(self):
         self.conexion= pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
@@ -139,12 +149,19 @@ class MatPrimDialog:
             return result
         
     def new_id(self):
-        conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
-        cursor = conexion.cursor()
-        cursor.execute("SELECT COUNT(*) FROM materias_primas WHERE nroMatPrim=%s", (self.NumMatPrim.get(),))
-        count = cursor.fetchone()[0]
-        if count > 0:
+        Nmp = self.NumMatPrim.get() 
+        Nmp = int(Nmp)
+        if Nmp <= 0 :
+            self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número apropiado.")) # Muestra el messagebox de error de manera asincrónica
             return True
+        else:
+            conexion = pymysql.connect(host="localhost", user="root", password="123456", database="Krausebbdd")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT COUNT(*) FROM materias_primas WHERE nroMatPrim=%s", (self.NumMatPrim.get(),))
+            count = cursor.fetchone()[0]
+            if count > 0:
+                self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente.")) # Muestra el messagebox de error de manera asincrónica
+                return True
             
     def guardar_datos(self):
         if self.NumMatPrim.get() == "" or self.nombre.get() == "" or self.cantidad.get() == "":
@@ -157,11 +174,10 @@ class MatPrimDialog:
             cursor = conexion.cursor()
             
             if not self.split_cantidad():
-                self.dialog.after(0, lambda: messagebox.showerror("Error", "El formato de entrada debe ser un número seguido de una unidad (por ejemplo, '14kg')."))  
+                self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número seguido de una unidad (por ejemplo, '14kg')."))  
                 return
             else: 
                 if self.new_id():
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de Producto ya existe actualmente.")) # Muestra el messagebox de error de manera asincrónica
                     return  # No sigue con la ejecución
                 else:
                     cursor.execute("INSERT INTO materias_primas (nroMatPrim, nombre, cantidad, proveedor_id) VALUES (%s, %s, %s, %s)", (
@@ -195,9 +211,11 @@ class MatPrimDialog:
             # Verifica si el número de materia prima ya existe
             if self.values[0] !=  self.NumMatPrim.get():
                 if self.new_id():
-                    # Muestra el messagebox de error de manera asincrónica
-                    self.dialog.after(0, lambda: messagebox.showerror("Control de Stock", "Ese número de materia prima ya existe actualmente."))
                     return  # No sigue con la ejecución
+                
+            if not self.split_cantidad():
+                self.dialog.after(0, lambda: messagebox.showerror("Error", "Ingreso incorrecto. El formato de entrada debe ser un número seguido de una unidad (por ejemplo, '14kg')."))  
+                return
 
             cursor.execute("UPDATE materias_primas SET nroMatPrim=%s, nombre=%s, cantidad=%s, proveedor_id=%s WHERE ID_MatPrim=%s", (
                 self.NumMatPrim.get(),
