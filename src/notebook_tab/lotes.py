@@ -127,40 +127,16 @@ class LoteApp:
         
         self.actualizar()
     
-    """
-    def on_combo_select(self, event):
-        selection = self.combo.get()
-        
-        if self.fecha_inicio_dateentry:
-            self.fecha_inicio_dateentry.destroy()
-        if self.fecha_fin_dateentry:
-            self.fecha_fin_dateentry.destroy()
-        if self.entry:
-            self.entry.destroy()
-                
-        if selection == "  Fecha Inicio":
-            self.fecha_inicio_dateentry = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
-            self.fecha_inicio_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        elif selection == "  Fecha Fin":
-            self.fecha_fin_dateentry = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
-            self.fecha_fin_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-        else:
-            self.entry = tk.Entry(self.frame1, width=15, font=("Cardana", 10))
-            self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=30)
-    """
-    
     def on_combo_select(self, event):
         selection = self.combo.get()
         
         if self.fecha_inicio_dateentry or self.fecha_fin_dateentry:
             self.fecha_inicio_dateentry.destroy()
             self.fecha_fin_dateentry.destroy()
-            #self.combo.destroy()
         if self.entry:
             self.entry.destroy()
                 
         if selection == "  Fecha":
-            
             self.fecha_fin_dateentry = DateEntry(self.frame1, date_pattern='yyyy-mm-dd')
             self.fecha_fin_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=(0,20))
             
@@ -168,9 +144,7 @@ class LoteApp:
             self.fecha_inicio_dateentry.pack(side=tk.RIGHT, ipady=1.5, padx=(0,20))
 
             self.combo.pack(side=tk.LEFT, padx=(330,0))
-        
         else:
-            
             self.entry = tk.Entry(self.frame1, width=15, font=("Cardana", 10))
             self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=50)
             
@@ -199,7 +173,6 @@ class LoteApp:
     
     def buscar(self):
         opcion = self.combo.get()
-        
         self.trv.delete(*self.trv.get_children())  # Limpiar la Treeview
         
         try:
@@ -275,18 +248,14 @@ class LoteApp:
         self.combo.set("Seleccione una opción")  # Restablece el Combobox a una cadena vacía
         self.actualizar()
         
-        opcion_sel = self.combo.get()
         
         if self.fecha_inicio_dateentry and self.fecha_fin_dateentry :
-        #if opcion_sel == "  Fecha" :
             self.fecha_inicio_dateentry.destroy()
             self.fecha_fin_dateentry.destroy()
             
             self.entry = tk.Entry(self.frame1, width=15, font=("Cardana", 10))
             self.entry.pack(side=tk.RIGHT, ipady=1.5, padx=50)
-        
         elif self.entry :
-        #elif opcion_sel == "  ID Lote" :
             self.entry.delete(0, tk.END)  # Borra el contenido del Entry
         
     

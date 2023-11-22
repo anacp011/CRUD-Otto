@@ -7,8 +7,6 @@ from notebook_tab.materia_prima import MateriaPrimaApp
 from PIL import ImageTk, Image
 
 customtkinter.set_appearance_mode("dark") 
-#customtkinter.set_default_color_theme("blue")
-#self.wind.config(bg="#303030")
 
 class App:
     def __init__(self,root):
@@ -17,15 +15,10 @@ class App:
         self.wind.geometry("960x540")
         self.wind.resizable(False, False)
         
-        customtkinter.set_appearance_mode("dark") 
-        #customtkinter.set_default_color_theme("blue")
-        
-        #app = customtkinter.CTk()
-        
         icon_image = Image.open("icon/icon30.ico")
         icon_image1 = ImageTk.PhotoImage(icon_image)
         self.wind.iconphoto(True, icon_image1)
-        img1=ImageTk.PhotoImage(Image.open("img/nuevofondo.jpeg"))
+        img1=ImageTk.PhotoImage(Image.open("img/Login.jpeg"))
 
         l1=customtkinter.CTkLabel(self.wind, text=" ", image=img1)
         l1.pack()
@@ -42,12 +35,6 @@ class App:
         self.entry2=customtkinter.CTkEntry(self.wind, width=220, height=40, border_color="#FF3033", fg_color="white", text_color="#FF3033",bg_color="#FF3033", placeholder_text="Password", placeholder_text_color="#FF3033", font=('Century Gothic', 15,'bold'))
         self.entry2.place(x=360, y=330)
         self.entry2.configure(show="*")
-
-        """self.check_var = IntVar()
-        check_show_psw = Checkbutton(self.wind, text = "", variable = self.check_var, \
-                        onvalue = 1, offvalue = 0, bg='white', \
-                         command = self.show_hide_psd, relief=tk.FLAT)
-        check_show_psw.place(x=340, y=330)"""
         
         self.check_var = customtkinter.IntVar()
         my_check = customtkinter.CTkCheckBox(self.wind, text="", variable=self.check_var, onvalue=1, offvalue=0, hover_color="#FF3033", border_color="#FF3033", bg_color='white', fg_color="#FF3033", width=0, command = self.show_hide_psd)
@@ -64,7 +51,6 @@ class App:
     def button_function(self):
         self.wind.withdraw()   # Cierra la ventana de inicio
         main_window = tk.Toplevel()  # Crea una nueva ventana
-        #main_window.eval('tk::PlaceWindow . center')
         main_window.title("Programa Principal")
         main_window.config(bg="#6f6f6f")
         icon_image = Image.open("icon/icon30.ico")

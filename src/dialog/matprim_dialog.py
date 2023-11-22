@@ -18,10 +18,6 @@ class MatPrimDialog:
         self.dialog.configure(bg="#A5A5A5")
         self.dialog.columnconfigure(0, weight=2)
         self.dialog.columnconfigure(1, weight=2)
-
-        #style = ttk.Style()
-        #style.configure("Label", font=("Helvetica", 9))
-        
         
         self.cantidad_var = tk.StringVar()
         self.cantidad = tk.IntVar()
@@ -75,42 +71,6 @@ class MatPrimDialog:
         self.dialog.destroy()
         self.parent_matprim.top_close()
     
-    """def split_cantidad(self):    
-        
-        match = re.match(r"([0-9]+)([a-z]+)", self.cantidad.get(), re.I)
-        number = match.groups()[0]
-        unit = match.groups()[1]
-        if number and unit:
-            items = match.groups()
-            return items
-        elif not unit:
-            messagebox.error("Ingresar cantidad en MP", "No ha ingresado la unidad de cantidad de la materia prima")
-        else: 
-            messagebox.error("Ingresar cantidad en MP", "No ha ingresado la cantidad de la materia prima")"""
-
-
-    """def split_cantidad(self):
-        cantidad = self.cantidad.get()
-        if not cantidad:
-            messagebox.showerror("Ingresar cantidad en MP", "No ha ingresado la cantidad de la materia prima")
-            return None
-        
-        match = re.search(r"(\d+)([a-zA-Z]+)", cantidad)
-        
-        if match:
-            number,unit = match.groups()
-             #= match.groups()[1]
-            # Verificamos si tanto el número como la unidad no están vacíos
-            if number and unit:
-                cant = number + unit  # Devolvemos el número y la unidad concatenados
-                return cant
-            #else:
-            #    messagebox.showerror("Error", "Debe ingresar tanto la cantidad como la unidad de la materia prima.")
-                
-        #else:
-        #    messagebox.showerror("Error", "El formato de entrada debe ser un número seguido de una unidad (por ejemplo, '14kg').")
-        #    return 0"""
-            
     def split_cantidad(self):
         cantidad = self.cantidad.get()
         try:
